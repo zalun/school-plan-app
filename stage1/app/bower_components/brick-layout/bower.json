@@ -1,0 +1,29 @@
+{
+  "name": "brick-layout",
+  "version": "0.1.0",
+  "homepage": "https://github.com/mozbrick/brick-layout",
+  "authors": [
+    "mozilla"
+  ],
+  "description": "A simple layout component",
+  "main": "dist/brick-layout.html",
+  "keywords": [
+    "brick",
+    "webcomponents"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "platform": "Polymer/platform",
+    "brick-common": "~0.1.4"
+  },
+  "devDependencies": {
+    "brick-action": "mozbrick/brick-action"
+  }
+}

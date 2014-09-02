@@ -1,0 +1,26 @@
+{
+  "name": "brick-calendar",
+  "version": "0.1.0",
+  "homepage": "https://github.com/mozbrick/brick-calendar",
+  "authors": [
+    "mozilla"
+  ],
+  "description": "A component acting as a calendar widget that can be manipulated with minimal user-written code/layout.",
+  "main": "dist/brick-calendar.html",
+  "keywords": [
+    "brick",
+    "webcomponents"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "platform": "Polymer/platform",
+    "brick-common": "~0.1.3"
+  }
+}

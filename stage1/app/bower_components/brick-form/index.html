@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <title>brick-form</title>
+
+    <!-- Importing Polyfill -->
+    <script src="bower_components/platform/platform.js"></script>
+
+    <!-- Importing brick-storage-indexeddb for the demo -->
+    <link rel="import" href="bower_components/brick-storage-indexeddb/src/brick-storage-indexeddb.html">
+
+    <!-- Importing Custom Elemenent -->
+    <link rel="import" href="dist/brick-form.local.html">
+
+  </head>
+  <body>
+
+    <brick-storage-indexeddb name="worldcup" keyname="group" id="store">
+    </brick-storage-indexeddb>
+
+    <select id="groupselect">
+      <option value="a" selected>Group A</option>
+      <option value="b">Group B</option>
+      <option value="c">Group C</option>
+      <option value="d">Group D</option>
+      <option value="e">Group E</option>
+      <option value="f">Group F</option>
+      <option value="g">Group G</option>
+    </select>
+    <hr>
+
+    <!-- Using Custom Element -->
+    <brick-form storage="store" name="a">
+      <label>
+        Team 1 <input type="text" name="team1_name">
+      </label>
+      <label>
+        Points: <input type="text" name="team1_points">
+      </label>
+      <br>
+      <label>
+        Team 2 <input type="text" name="team2_name">
+      </label>
+      <label>
+        Points: <input type="text" name="team2_points">
+      </label>
+      <br>
+      <label>
+        Team 3 <input type="text" name="team3_name">
+      </label>
+      <label>
+        Points: <input type="text" name="team3_points">
+      </label>
+      <br>
+      <label>
+        Team 4 <input type="text" name="team4_name">
+      </label>
+      <label>
+        Points: <input type="text" name="team4_points">
+      </label>
+      <br>
+      <input type="submit" value="update">
+    </brick-form>
+
+
+    <script>
+      var form = document.querySelector("brick-form");
+      var groupselect = document.querySelector("#groupselect");
+      groupselect.addEventListener("change",function(e){
+        form.name = e.target.value;
+      });
+    </script>
+
+  </body>
+</html>

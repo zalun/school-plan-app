@@ -1,0 +1,26 @@
+{
+  "name": "brick-tabbar",
+  "version": "0.1.0",
+  "homepage": "https://github.com/mozbrick/brick-tabbar",
+  "authors": [
+    "mozilla"
+  ],
+  "description": "A Brick tabbar component.",
+  "main": "dist/brick-tabbar.html",
+  "keywords": [
+    "brick",
+    "webcomponents"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "platform": "Polymer/platform",
+    "brick-common": "~0.1.3"
+  }
+}

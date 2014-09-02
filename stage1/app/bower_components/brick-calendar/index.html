@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <title>brick-calendar</title>
+
+    <!-- Importing Polyfill -->
+    <script src="bower_components/platform/platform.js"></script>
+
+    <!-- Importing Custom Elemenent -->
+    <link rel="import" href="dist/brick-calendar.local.html">
+  </head>
+  <body>
+    <article class="container">
+      <header>
+        <h1>brick-calendar</h1>
+      </header>
+      <p>Provides a simple calendar UI widget.</p>
+      <p>Note that when the API works with datestrings, while it's best to pass in "YYYY-MM-DD" ISO strings to the calendar, the <code class="prettyprint">&lt;brick-calendar&gt;</code> will also accept any string parseable by <code class="prettyprint">Date.parse()</code>. However, be aware that browser implementations of <code class="prettyprint">Date.parse()</code> may differ slightly.</p>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Basic usage</h2>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar class="red"></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar&gt;&lt;/brick-calendar&gt;</pre>
+        </div>
+      </section>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Basic calendar with navigation controls</h2>
+          <p>To add a simple set of navigation controls to the calendar, simply add the <code class="prettyprint">controls</code> attribute to the <code class="prettyprint">&lt;brick-calendar&gt;</code></p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar controls></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar controls&gt;&lt;/brick-calendar&gt;</pre>
+        </div>
+      </section>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Initializing the viewport with <code>view</code></h2>
+          <p>While calendars default to focusing on the current day, by setting a date in the <code>view</code> attribute of the <code class="prettyprint">&lt;brick-calendar&gt;</code>, users can specify the initial viewport of the calendar.</p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar view="2013-06-09" controls></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar view="2013-06-09" controls&gt;&lt;/brick-calendar&gt;</pre>
+        </div>
+      </section>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Initializing selected dates with <code>chosen/.chosen</code></h2>
+          <p>While the user can directly select a date on the calendar, the calendar can also be initialized with a starting chosen date.</p>
+          <p>The <code>chosen</code> attribute is also accessible with the the <code>.chosen</code> property.</p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar chosen="2012-05-17" controls></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar chosen="2012-05-17" controls&gt;&lt;/brick-calendar&gt;</pre>
+          <h3>Equivalent initial JavaScript</h3>
+          <pre class="prettyprint javascript">// assume calendar is already defined to be the<br/>// &lt;brick-calendar&gt; DOM node<br/>calendar.chosen = &quot;2013-05-17&quot;;<br/>// ...or...<br/>calendar.chosen = &quot;May 17, 2013&quot;;<br/>// ...or...<br/>// remember that Date() months start at 0, not 1<br/>calendar.chosen = new Date(2013, 4, 17);</pre>
+        </div>
+      </section>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Allowing multi-selection with <code>multiple</code></h2>
+          <p>While the calendar defaults to only allowing one chosen date at a time, when the <code>multiple</code> attribute is applied, multiple dates can be chosen at once. (Try dragging the cursor around to paint over dates.)</p>
+          <p>In addition, this allows the <code>chosen</code> attribute to take more than one date. To do so, pass in a JSON string for an array whose elements are either: strings signifying single dates, or two-element arrays of strings signifying the start and end of a date range.</p>
+          <p><b>Important note:</b> Because these must be JSON strings, make sure that all quoted strings in the attribute string are using double quotes, not single quotes!</p>
+          <p>If assigning to the calendar's <code>.chosen</code> property instead, the user can provide the actual array instead of a JSON string, and <code class="prettyprint">Date</code> objects may be used instead of strings.</p>
+          <p>The <code>multiple</code> attribute is also accessible with the the <code>.multiple</code> property.</p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar multiple controls
+              chosen='[["2013-06-04", "2013-06-10"], "2013-06-19", ["2013-06-29","2013-07-02"]]'>
+            </brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar multiple controls<br/>       chosen='[[&quot;2013-06-04&quot;, &quot;2013-06-10&quot;], &quot;2013-06-19&quot;, [&quot;2013-06-29&quot;,&quot;2013-07-02&quot;]]'&gt;<br/>&lt;/brick-calendar&gt;</pre>
+          <h3>Equivalent initial JavaScript</h3>
+          <pre class="prettyprint javascript">// assume calendar is already defined to be the<br/>// &lt;brick-calendar&gt; DOM node<br/>calendar.chosen = '[[&quot;2013-06-04&quot;, &quot;2013-06-10&quot;], &quot;2013-06-19&quot;, [&quot;2013-06-29&quot;,&quot;2013-07-02&quot;]]';<br/>// ...or...<br/>calendar.chosen = [[&quot;2013-06-04&quot;, &quot;2013-06-10&quot;], &quot;2013-06-19&quot;, [&quot;2013-06-29&quot;,&quot;2013-07-02&quot;]];<br/>// ...or...<br/>// remember that Date() months start at 0, not 1<br/>calendar.chosen = [[new Date(2013, 5, 4), new Date(2013, 5, 10)], <br/>                   new Date(2013, 5, 19), <br/>                   [new Date(2013, 5, 29), new Date(2013, 6, 2)]<br/>                  ];</pre>
+        </div>
+      </section>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Preventing date selection with <code>notoggle</code></h2>
+          <p>By default, the <code class="prettyprint">&lt;calendar&gt;</code> allows the user to select dates by clicking individual days.</p>
+          <p>However, if the <code>notoggle</code> attribute is provided, the calendar disables choosing dates through the interface. (This does not prevent developers from programmatically changing the chosen dates.)</p>
+          <p>This prevents <code>datetoggleon</code> and <code>datetoggleoff</code> events from being triggered normally through the interface, but <code>datetap</code> events are unaffected. (See <a href="#events-demo">events demo</a> for details on these events)</p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar notoggle controls></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar notoggle controls&gt;&lt;/brick-calendar&gt;</pre>
+        </div>
+      </section>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Displaying multiple months with <code>span</code></h2>
+          <p>By default, the calendar only shows one month at a time, but by providing a number to the <code>span</code> attribute, the calendar can display as many months as the user needs.</p>
+          <p>The <code>span</code> attribute is also accessible with the the <code>.span</code> property.</p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar controls span=2></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar controls span=2&gt;&lt;/brick-calendar&gt;</pre>
+        </div>
+      </section>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Changing the starting weekday with <code>first-weekday-num/.firstWeekdayNum</code></h2>
+          <p>By default, the calendar uses Sunday as the first day of the week. However, in many regions, this may not be the case, so the <code class="prettyprint">&lt;brick-calendar&gt;</code> API provides the <code>first-weekday-num</code> attribute to change which day starts the week.</p>
+          <p>The number passed to <code>first-weekday-num</code> should be a number between 0 to 6, where 0=Sunday, 1=Monday, etc.</p>
+          <p>The <code>first-weekday-num</code> attribute is also accessible with the the <code>.firstWeekdayNum</code> property.</p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar controls first-weekday-num=1></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar controls first-weekday-num=1&gt;&lt;/brick-calendar&gt;</pre>
+        </div>
+      </section>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Changing the calendar's labels with <code>.labels</code></h2>
+          <p>While the calendar defaults to using English labels, these labels can be edited by the user by editing the <code>.labels</code> property of the calendar.</p>
+          <p>When changing labels, the given data should be a JS object that can contain any of the following key:value pairs:
+          <pre class="prettyprint">{
+            "prev": a string to display on the previous-month navigation button,
+            "next": a string to display on the next-month navigation button,
+            "months": an array of 12 strings, where the first string corresponds to January, the second to February, etc, all the way up to December.,
+            "weekdays": an array of 7 strings, where the first string corresponds to Sunday, the second to Monday, etc, all the way up to Saturday.
+          }
+          </pre>
+          <p>If the new data given does not have any of these keys, that corresponding particular label will remain unchanged.</p>
+          <p>For example, we can use this to provide a French-language calendar.</p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar lang="fr" controls first-weekday-num=1></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar controls first-weekday-num=1&gt;&lt;/brick-calendar&gt;</pre>
+          <h3>JavaScript</h3>
+          <pre class="prettyprint javascript">var frenchCal = document.querySelector(&quot;brick-calendar[lang=fr]&quot;);<br/>frenchCal.labels = {<br/>    prev: &quot;&lt;&lt;&quot;,<br/>    next: &quot;&gt;&gt;&quot;,<br/>    months: [&quot;janvier&quot;, &quot;f\u00E9vrier&quot;, &quot;mars&quot;, &quot;avril&quot;, &quot;mai&quot;, <br/>             &quot;juin&quot;, &quot;juillet&quot;, &quot;ao\u00FBt&quot;, &quot;septembre&quot;, &quot;octobre&quot;, <br/>             &quot;novembre&quot;, &quot;d\u00E9cembre&quot;],<br/>    weekdays: [&quot;dim&quot;, &quot;lun&quot;, &quot;mar&quot;, &quot;mer&quot;, &quot;jeu&quot;, &quot;ven&quot;, &quot;sam&quot;]<br/>};</pre>
+        </div>
+      </section>
+      <section id="events-demo" class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Events demo</h2>
+          <p>To provide API hooks for developers, the <code class="prettyprint">&lt;brick-calendar&gt;</code> fires several different events as it is interacted with:
+            <ul>
+              <li><code>datetoggleon</code> events are fired when a date is first chosen/turned on. This event also provides the following information in <code>e.detail</code>:
+                <pre class="prettyprint">{
+                  'date': the Date object corresponding to the toggled date,
+                  'iso': the ISO-formatted string representing the toggled date
+                }</pre>
+              </li>
+              <li><code>datetoggleoff</code> events are similar to <code>datetoggleoff</code>, but are fired when a date is unchosen/turned off. This event also provides the following information in <code>e.detail</code>:
+                <pre class="prettyprint">{
+                  'date': the Date object corresponding to the toggled date,
+                  'iso': the ISO-formatted string representing the toggled date
+                }</pre>
+              </li>
+              <li><code>datetap</code> events are fired when the user taps a day without dragging/painting over other dates. The event also receives the following custom datamap in <code>e.detail</code>:
+                <pre class="prettyprint">{
+                  'date': the Date object corresponding to the tapped date,
+                  'iso': the ISO-formatted string representing the tapped date
+                }</pre>
+              </li>
+              <li><code>prevmonth</code> and <code>nextmonth</code> events are fired whenever the user uses the calendar's navigation controls to move back or forward a month, respectively.</li>
+            </ul>
+          </p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar controls multiple></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar controls multiple&gt;&lt;/brick-calendar&gt;</pre>
+          <h3>Events</h3>
+          <pre class="prettyprint events"></pre>
+        </div>
+      </section>
+      <section class="demo-wrap row">
+        <header class="col-md-12">
+          <h2>Styling the calendar</h2>
+          <p>Due to the number of elements in the calendar, utilize any of the following CSS selectors to customize the calendar's appearance:
+            <ul>
+              <li>To style the calendar's container, apply styles to <code class="prettyprint">brick-calendar</code>.</li>
+              <li>To style the month label, apply styles to <code class="prettyprint">brick-calendar .month-label</code>.
+              <li>To style individual months, apply styles to <code class="prettyprint">brick-calendar .month</code>.
+                <ul>
+                  <li>Note that to change how wide months are, apply the style here, as the width of days and weeks are percentages in relation to this width</li>
+                  <li>Also note that a month's max-width is constrained by the width of the <code class="prettyprint">brick-calendar</code>.</li>
+                </ul>
+              </li>
+              <li>To style individual weeks, apply styles to <code class="prettyprint">brick-calendar .week</code>.</li>
+              <li>To style individual days, apply styles to <code class="prettyprint">brick-calendar .day</code>.</li>
+              <li>To style the row of weekday labels, apply styles to <code class="prettyprint">brick-calendar .weekday-labels</code>.</li>
+              <li>To style individual weekday labels, apply styles to <code class="prettyprint">brick-calendar .weekday-label</code>.</li>
+              <li>To style the current day, apply styles to <code class="prettyprint">brick-calendar .day.today</code>.</li>
+              <li>To style days that are not in the current month, apply styles to <code class="prettyprint">brick-calendar .day.badmonth</code></li>
+              <li>To style chosen days, apply styles to <code class="prettyprint">brick-calendar .day.chosen</code></li>
+              <li>To style the previous and next navigation control buttons, apply styles to <code class="prettyprint">brick-calendar .prev</code> and <code class="prettyprint">brick-calendar .next</code>.</li>
+              <li>To style how elements appear when the calendar is being dragged on, use the <code class="prettyprint">brick-calendar[active]</code> selector.
+                <ul>
+                  <li>Similarly, to style the day that is being hovered over during a drag, use <code class="prettyprint">brick-calendar[active] .day[active]</code></li>
+                </ul>
+            </ul>
+          </p>
+        </header>
+        <div class="col-md-4 col-sm-6">
+          <figure class="demo">
+            <brick-calendar id="custom-style-cal" controls></brick-calendar>
+          </figure>
+        </div>
+        <div class="markup-wrap col-md-8 col-sm-6">
+          <h3>Markup</h3>
+          <pre class="prettyprint html">&lt;brick-calendar id="custom-style-cal" controls&gt;&lt;/brick-calendar&gt;</pre>
+          <h3>CSS styling</h3>
+          <pre class="prettyprint css">#custom-style-cal{<br/>    background-color: lightsteelblue;<br/>}<br/><br/>#custom-style-cal .month-label{<br/>    background-color: rgba(255,255,255,.3);<br/>}<br/><br/>/* use height and line-height to <br/>* modify the height of weeks */<br/>#custom-style-cal .week{<br/>    height: 1.9em;<br/>    line-height: 1.9em;<br/>}<br/><br/>#custom-style-cal .day{<br/>    font-size: .85em;<br/>    border-radius: 50%;<br/>    border: 1px solid #fff;<br/>    box-shadow: inset 1px 1px 4px grey;<br/>}<br/><br/>/* use :not selectors to let default colors <br/> * fall through in those cases */<br/>#custom-style-cal .day:not(:hover):not(.chosen){<br/>    background-color: #fff;<br/>}<br/><br/>#custom-style-cal .day.today{<br/>    border-color: limegreen;<br/>}</pre>
+
+      </section>
+
+    </article>
+  </body>
+</html>
+

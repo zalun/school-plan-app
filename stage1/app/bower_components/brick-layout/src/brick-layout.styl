@@ -1,0 +1,179 @@
+@import '../bower_components/brick-common/styles/mixins'
+@import '../bower_components/brick-common/styles/params'
+
+$xs = {                end:  768px, name: xs }
+$s  = { start:  768px, end:  992px, name: s  }
+$m  = { start:  992px, end: 1200px, name: m  }
+$l  = { start: 1200px,              name: l  }
+
+/**
+ * example:
+ *  & > [horizontal-lt-s/m/l] { mixin() }
+ *  & > [horizontal-gt-xs/s/m] { mixin() }
+ *  & > [horizontal-xs/s/m/l] { mixin() }
+ *  & > [horizontal] { mixin() }
+ * would be created by:
+ * responsify("& > ", horizontal, mixin)
+ */
+responsify(selector, attr, content) {
+  // attr-lt-[s,m,l]
+  for $range in $s $m $l {
+    {selector}[{attr}-lt-{$range.name}] {
+      @media (max-width: $range.start) {
+        content();
+      }
+    }
+  }
+  // attr-gt-[xs,s,m]
+  for $range in $xs $s $m {
+    {selector}[{attr}-gt-{$range.name}] {
+      @media (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr-[xs,s,m,l]
+  for $range in $s $m {
+    {selector}[{attr}-{$range.name}] {
+      @media (max-width: $range.start) and (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr
+  {selector}[{attr}] {
+    content();
+  }
+}
+
+/**
+ * notice the () around teh attribute. that is because of
+ * :host([attr]) syntax to style the host node.
+ *
+ * example:
+ *  &([horizontal-lt-s/m/l]) { mixin() }
+ *  &([horizontal-gt-xs/s/m]) { mixin() }
+ *  &([horizontal-xs/s/m/l]) { mixin() }
+ *  &([horizontal]) { mixin() }
+ * would be created by:
+ * responsifyHost("& > ", horizontal, mixin)
+ */
+responsifyHost(selector, attr, content) {
+  // attr-lt-[s,m,l]
+  for $range in $s $m $l {
+    {selector}([{attr}-lt-{$range.name}]) {
+      @media (max-width: $range.start) {
+        content();
+      }
+    }
+  }
+  // attr-gt-[xs,s,m]
+  for $range in $xs $s $m {
+    {selector}([{attr}-gt-{$range.name}]) {
+      @media (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr-[xs,s,m,l]
+  for $range in $s $m {
+    {selector}([{attr}-{$range.name}]) {
+      @media (max-width: $range.start) and (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr
+  {selector}([{attr}]) {
+    content();
+  }
+}
+
+:host {
+
+  overflow: hidden;
+  box-sizing: border-box;
+  box-orient: vertical;
+  position: relative;
+  height: 100%
+  display: flex;
+  flex-direction: column;
+
+  /**
+   * Horizontal Layout
+   *--------------------------------------------------*/
+  _horizontal() {
+    box-orient: horizontal;
+    flex-direction: row;
+  }
+  responsifyHost("&", horizontal, _horizontal);
+
+  /**
+   *  Flex-children
+   *--------------------------------------------------*/
+  _flex() {
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+  }
+  responsify("& ::content > ", flex, _flex);
+
+  /**
+   *  hide
+   *--------------------------------------------------*/
+  _hide() {
+    display: none;
+  }
+  responsify("& ::content ", hide, _hide);
+
+
+  /**
+   *  Drawer
+   *--------------------------------------------------*/
+  _drawer() {
+    height: 100%;
+    position: absolute;
+    transform: translate(-100%,0);
+    transition: transform .2s ease;
+  }
+  responsify("& ::content > ", drawer, _drawer)
+  //show state
+  &([open]) {
+    & ::content > [drawer],
+    & ::content > [drawer-lt-{$s.name}],
+    & ::content > [drawer-lt-{$m.name}],
+    & ::content > [drawer-lt-{$l.name}],
+    & ::content > [drawer-gt-{$xs.name}],
+    & ::content > [drawer-gt-{$s.name}],
+    & ::content > [drawer-gt-{$m.name}],
+    & ::content > [drawer-{$xs.name}],
+    & ::content > [drawer-{$s.name}],
+    & ::content > [drawer-{$m.name}],
+    & ::content > [drawer-{$l.name}] {
+      transform: translate(0,0);
+    }
+  }
+
+  _drawertop() {
+    position: absolute;
+    width: 100%;
+    transform: translate(0,-100%);
+    transition: transform .2s ease;
+  }
+  responsify("& ::content > ", drawer-top, _drawertop)
+  &([open]) {
+    & ::content [drawer-top],
+    & ::content [drawer-top-lt-{$s.name}],
+    & ::content [drawer-top-lt-{$m.name}],
+    & ::content [drawer-top-lt-{$l.name}],
+    & ::content [drawer-top-gt-{$xs.name}],
+    & ::content [drawer-top-gt-{$s.name}],
+    & ::content [drawer-top-gt-{$m.name}],
+    & ::content [drawer-top-{$xs.name}],
+    & ::content [drawer-top-{$s.name}],
+    & ::content [drawer-top-{$m.name}],
+    & ::content [drawer-top-{$l.name}] {
+      transform: translate(0,0);
+    }
+  }
+}

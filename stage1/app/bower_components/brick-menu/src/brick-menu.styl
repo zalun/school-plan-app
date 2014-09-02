@@ -1,0 +1,101 @@
+@import '../bower_components/brick-common/styles/mixins'
+@import '../bower_components/brick-common/styles/params'
+
+$xs = {                end:  768px, name: xs }
+$s  = { start:  768px, end:  992px, name: s  }
+$m  = { start:  992px, end: 1200px, name: m  }
+$l  = { start: 1200px,              name: l  }
+
+/**
+ * notice the () around teh attribute. that is because of
+ * :host([attr]) syntax to style the host node.
+ *
+ * example:
+ *  &([horizontal-lt-s/m/l]) { mixin() }
+ *  &([horizontal-gt-xs/s/m]) { mixin() }
+ *  &([horizontal-xs/s/m/l]) { mixin() }
+ *  &([horizontal]) { mixin() }
+ * would be created by:
+ * responsifyHost("& > ", horizontal, mixin)
+ */
+responsifyHost(selector, attr, content) {
+  // attr-lt-[s,m,l]
+  for $range in $s $m $l {
+    {selector}([{attr}-lt-{$range.name}]) {
+      @media (max-width: $range.start) {
+        content();
+      }
+    }
+  }
+  // attr-gt-[xs,s,m]
+  for $range in $xs $s $m {
+    {selector}([{attr}-gt-{$range.name}]) {
+      @media (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr-[xs,s,m,l]
+  for $range in $s $m {
+    {selector}([{attr}-{$range.name}]) {
+      @media (max-width: $range.start) and (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr
+  {selector}([{attr}]) {
+    content();
+  }
+}
+
+:host {
+
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+
+  // vertical
+  flex-direction: column;
+
+  // horizontal
+  _horizontal() {
+    // menu-item/tab
+    flex-direction: row;
+    & ::content > * {
+      flex(1);
+      box-sizing: border-box;
+      display: inline-block;
+      min-width: auto;
+      min-height: auto;
+      vertical-align: middle;
+      text-align: center;
+    }
+  }
+  responsifyHost("&", horizontal, _horizontal);
+
+  ::content > * {
+    position: relative;
+  }
+
+  addArrows() {
+    content: "\f105";
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    position: absolute;
+    right: 0;
+  }
+
+  // handling arrows
+  &([arrow]:not([horizontal])) ::content > *:after {
+    addArrows();
+  }
+  &(:not([horizontal])) ::content > *[arrow]:after {
+    addArrows();
+  }
+}

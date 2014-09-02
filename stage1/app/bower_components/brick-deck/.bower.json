@@ -1,0 +1,34 @@
+{
+  "name": "brick-deck",
+  "homepage": "https://github.com/mozbrick/brick-deck",
+  "authors": [
+    "mozilla"
+  ],
+  "description": "A box element in which cards can be cycled independently of order with a variety of different transitions.",
+  "main": "dist/brick-deck.html",
+  "keywords": [
+    "brick",
+    "webcomponents"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "platform": "Polymer/platform",
+    "brick-common": "~0.1.4"
+  },
+  "_release": "7899df3f19",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "7899df3f19bc979fd63db3b9504bc70b28dcfd4a"
+  },
+  "_source": "git://github.com/mozbrick/brick-deck.git",
+  "_target": "*",
+  "_originalSource": "mozbrick/brick-deck"
+}

@@ -1,0 +1,32 @@
+@import '../../../bower_components/brick-common/styles/mixins'
+@import '../../../bower_components/brick-common/styles/params'
+@import '../../../bower_components/brick-common/styles/themes/default/params'
+
+:host {
+  border: 1px solid #cecece;
+  &:not([active]) ::content {
+    .prev:hover, .next:hover {
+      background-color: #f9f9f9;
+      opacity: 0.7;
+    }
+    .day:not(.chosen):hover {
+      background: #ccc;
+    }
+  }
+  ::content {
+    .month-label {
+      border-bottom: 1px solid #cecece;
+    }
+    .day[active] {
+      border-color: #ffa500;
+    }
+    .day.chosen {
+      background: #0095dd;
+      color: #fff;
+    }
+    .day.today {
+      font-weight: bold;
+    }
+  }
+}
+

@@ -1,0 +1,35 @@
+{
+  "name": "brick-storage-indexeddb",
+  "version": "0.0.9",
+  "homepage": "https://github.com/mozbrick/brick-storage-indexeddb",
+  "authors": [
+    "mozilla"
+  ],
+  "description": "A simple promise based indexeddb wrapper.",
+  "main": "dist/brick-storage-indexeddb.html",
+  "keywords": [
+    "brick",
+    "webcomponents"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "brick-common": "~0.1.3",
+    "platform": "Polymer/platform"
+  },
+  "_release": "0.0.9",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.0.9",
+    "commit": "4d41016962cf33e51a565f0ef0c535269783646f"
+  },
+  "_source": "git://github.com/mozbrick/brick-storage-indexeddb.git",
+  "_target": "*",
+  "_originalSource": "mozbrick/brick-storage-indexeddb"
+}

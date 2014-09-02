@@ -1,0 +1,52 @@
+@import '../../../bower_components/brick-common/styles/mixins'
+@import '../../../bower_components/brick-common/styles/params'
+@import '../../../bower_components/brick-common/styles/themes/default/params'
+
+$header-title-color = $color-alpha;
+$header-button-color = $color-alpha;
+$header-button-color-active = $color-alpha;
+$header-button-background = rgba(0,0,0,0.1);
+$header-background = #fff;
+
+:host {
+  background: $header-background;
+  display: flex;
+  min-height: 50px;
+}
+
+::content {
+  h1, h2, h3, h4, h5, h6 {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    margin-right: 0px;
+    margin-left: 0px;
+    justify-content: center;
+    padding: 0 16px;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 24px;
+    line-height: 26px;
+    color: $header-title-color;
+  }
+
+  button {
+    &:active {
+      color: $header-button-color-active;
+      background: $header-button-background;
+    }
+    color: $header-button-color;
+    display: block;
+    border: none;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    min-width: 50px;
+    text-decoration: none;
+    text-align: center;
+    background: none;
+    border-radius: 0;
+  }
+}

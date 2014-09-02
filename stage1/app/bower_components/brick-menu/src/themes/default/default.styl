@@ -1,0 +1,29 @@
+@import '../../../bower_components/brick-common/styles/themes/default/params'
+
+
+:host {
+
+  padding: 0 $dim-small;
+  box-sizing: border-box;
+  & ::content > * {
+    color: $color-gamma;
+    padding: $dim-small 0;
+    border-bottom: 1px solid $color-theta;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &([horizontal]) {
+    padding: $dim-small 0;
+    & ::content > * {
+      padding: 0 $dim-small;
+      border-bottom: none;
+      border-right: 1px solid $color-theta;
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+
+}

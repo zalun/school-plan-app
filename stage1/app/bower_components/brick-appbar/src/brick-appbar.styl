@@ -1,0 +1,17 @@
+@import '../bower_components/brick-common/styles/mixins'
+@import '../bower_components/brick-common/styles/params'
+
+:host {
+  padding: 0;
+  width: 100%;
+  display: block;
+}
+
+::content h1, h2, h3, h4, h5, h6 {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  margin: 0;
+}

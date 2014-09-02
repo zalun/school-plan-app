@@ -1,0 +1,29 @@
+{
+  "name": "brick-form",
+  "version": "0.0.0",
+  "homepage": "https://github.com/mozbrick/brick-form",
+  "authors": [
+    "mozilla"
+  ],
+  "description": "A form component that syncs its content to a brick-storage component.",
+  "main": "dist/brick-form.html",
+  "keywords": [
+    "brick",
+    "webcomponents"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "platform": "Polymer/platform",
+    "brick-common": "~0.1.4"
+  },
+  "devDependencies": {
+    "brick-storage-indexeddb": "mozbrick/brick-storage-indexeddb"
+  }
+}
