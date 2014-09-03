@@ -27,10 +27,14 @@ body {
     padding:0px;
 	height: 100%;
 }
+
 h1 {
-	font-size: 14px;
+	text-align: center;
+	font-size: 1.5em;
 	margin: 5px;
+	padding: 0;
 }
+
 table {
 	width: 100%;
     font-family:"Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
@@ -38,16 +42,19 @@ table {
     text-align:left;
     border-collapse:collapse;
 }
+
 th {
     font-size:14px;
     font-weight:normal;
     color:#039;
     padding:10px 8px;
 }
+
 td {
     color:#669;
     padding:8px;
 }
+
 tbody tr:nth-child(odd) {
     background:#e8edff;
 }

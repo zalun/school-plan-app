@@ -31,6 +31,13 @@ table {
     text-align:left;
     border-collapse:collapse;
 }
+
+h1 {
+	text-align: center;
+	font-size: 1.5em;
+	margin: 5px;
+	padding: 0;
+}
 th {
     font-size:14px;
     font-weight:normal;
