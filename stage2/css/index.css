@@ -16,18 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-* {
-    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
-}
 
+html {
+	height: 100%;
+}
 body {
-    -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
-    -webkit-user-select: text;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size:12px;
     margin:0px;
     padding:0px;
+	height: 100%;
+}
+h1 {
+	font-size: 14px;
+	margin: 5px;
 }
 table {
 	width: 100%;
@@ -49,3 +51,4 @@ td {
 tbody tr:nth-child(odd) {
     background:#e8edff;
 }
+

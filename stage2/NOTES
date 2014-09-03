@@ -1,13 +1,6 @@
-Changed app to landscape
-<preference name="Orientation" value="landscape-primary" />
+Added html, body { height: 100% }
 
-
-
-Problems with brick :(
-
-Brick added (http://mozbrick.github.io/)
+Brick Deck added to switch betweeen school plans (http://mozbrick.github.io/)
 
 cd  stage1
 bower install mozbrick/brick 
-mv app/bower_components ./
-rm -rf app

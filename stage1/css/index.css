@@ -17,20 +17,11 @@
  * under the License.
  */
 
-html {
-	height: 100%;
-}
 body {
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     font-size:12px;
     margin:0px;
     padding:0px;
-	height: 100%;
-}
-brick-deck {
-	height: 100%;
-}
-brick-card {
 	height: 100%;
 }
 table {

@@ -1,4 +1,5 @@
 var app = {
+    planGroup: null,
     // Application Constructor
     initialize: function() {
         this.bindEvents();
@@ -10,10 +11,15 @@ var app = {
         app.receivedEvent('deviceready');
     },
     receivedEvent: function(id) {
-        console.log('Received Event: ' + id);
+        app.planGroup = document.getElementById('plan-group');
+        app.planGroup.loop = true;
+        app.planGroup.addEventListener('click', app.nextPlan);
+    },
+    nextPlan: function() {
+        app.planGroup.nextCard();
     }
 }
 
-window.load = function() {
+window.onload = function() {
   app.initialize();
 }
