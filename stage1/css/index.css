@@ -38,16 +38,19 @@ h1 {
 	margin: 5px;
 	padding: 0;
 }
+
 th {
     font-size:14px;
     font-weight:normal;
     color:#039;
     padding:10px 8px;
 }
+
 td {
     color:#669;
     padding:8px;
 }
+
 tbody tr:nth-child(odd) {
     background:#e8edff;
 }

@@ -2,5 +2,3 @@ Changed app to landscape
 
 <preference name="Orientation" value="landscape-primary" />
 in config.xml of the Cordova app itself
-
-Problems with brick :(
