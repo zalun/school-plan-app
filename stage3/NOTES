@@ -8,4 +8,4 @@ Realization:
     ln -fs ../stage3/ www
 
 Detecting one finger swipe
-Adding brick/tabbar
+Adding brick/appbar
