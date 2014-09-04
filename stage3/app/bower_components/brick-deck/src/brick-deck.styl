@@ -1,0 +1,159 @@
+@import '../bower_components/brick-common/styles/mixins'
+@import '../bower_components/brick-common/styles/params'
+
+/**
+ * Selectors like brick-card[transition-type^="slide"]
+ * which match the beginning of an attribute currently
+ * do not work with Platform.ShadowCSS.shimStyle().
+ * Therefore they are not used even though they would
+ * simplify the selectors.
+ */
+
+$slide-duration = 0.4s;
+
+:host {
+
+  display: block;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+
+  & ::content > brick-card {
+    display: none;
+    position: absolute !important;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+    opacity: 1;
+    box-sizing: border-box;
+    transform-style: preserve-3d;
+    transform: translate(0%, 0%) scale(1);
+    &[selected], &[transition] {
+      display: block;
+    }
+  }
+
+  &([transition-type="slide-up"]) ::content > brick-card,
+  &([transition-type="slide-down"]) ::content > brick-card,
+  &([transition-type="slide-right"]) ::content > brick-card,
+  &([transition-type="slide-left"]) ::content > brick-card,
+  & ::content > brick-card[transition-type="slide-up"],
+  & ::content > brick-card[transition-type="slide-down"],
+  & ::content > brick-card[transition-type="slide-right"],
+  & ::content > brick-card[transition-type="slide-left"] {
+    z-index: 1;
+    transition: transform $slide-duration ease;
+  }
+
+  &([transition-type="slide-up"]) ::content > brick-card[transition-direction="reverse"],
+  &([transition-type="slide-down"]) ::content > brick-card[transition-direction="reverse"],
+  &([transition-type="slide-right"]) ::content > brick-card[transition-direction="reverse"],
+  &([transition-type="slide-left"]) ::content > brick-card[transition-direction="reverse"],
+  & ::content > brick-card[transition-type="slide-up"][transition-direction="reverse"]
+  & ::content > brick-card[transition-type="slide-down"][transition-direction="reverse"]
+  & ::content > brick-card[transition-type="slide-left"][transition-direction="reverse"]
+  & ::content > brick-card[transition-type="slide-right"][transition-direction="reverse"] {
+    z-index: 2;
+  }
+
+  // transition-type on the deck
+  &([transition-type="slide-right"]) ::content > brick-card  {
+    &[transition-direction="forward"],
+    &[transition-direction="reverse"][hide] {
+      transform: translate(-100%, 0);
+    }
+    &[transition-direction="reverse"],
+    &[transition-direction="forward"][hide] {
+      transform: translate(100%, 0);
+    }
+  }
+  &([transition-type="slide-left"]) ::content > brick-card {
+    &[transition-direction="forward"],
+    &[transition-direction="reverse"][hide] {
+      transform: translate(100%, 0);
+    }
+    &[transition-direction="reverse"],
+    &[transition-direction="forward"][hide] {
+      transform: translate(-100%, 0);
+    }
+  }
+  &([transition-type="slide-up"]) ::content > brick-card {
+    &[transition-direction="forward"],
+    &[transition-direction="reverse"][hide] {
+      transform: translate(0, 100%);
+    }
+    &[transition-direction="reverse"],
+    &[transition-direction="forward"][hide] {
+      transform: translate(0, -100%);
+    }
+  }
+  &([transition-type="slide-down"]) ::content > brick-card {
+    &[transition-direction="forward"],
+    &[transition-direction="reverse"][hide] {
+      transform: translate(0, -100%);
+    }
+    &[transition-direction="reverse"],
+    &[transition-direction="forward"][hide] {
+      transform: translate(0, 100%);
+    }
+  }
+  &([transition-type="slide-right"]) ::content > brick-card[transition],
+  &([transition-type="slide-left"]) ::content > brick-card[transition],
+  &([transition-type="slide-up"]) ::content > brick-card[transition],
+  &([transition-type="slide-down"]) ::content > brick-card[transition], {
+    transform: translate(0, 0);
+  }
+
+  // transition-type on the card
+  & ::content > brick-card {
+    &[transition-type="slide-right"] {
+      &[transition-direction="forward"],
+      &[transition-direction="reverse"][hide] {
+        transform: translate(-100%, 0);
+      }
+      &[transition-direction="reverse"],
+      &[transition-direction="forward"][hide] {
+        transform: translate(100%, 0);
+      }
+    }
+    &[transition-type="slide-left"] {
+      &[transition-direction="forward"],
+      &[transition-direction="reverse"][hide] {
+        transform: translate(100%, 0);
+      }
+      &[transition-direction="reverse"],
+      &[transition-direction="forward"][hide] {
+        transform: translate(-100%, 0);
+      }
+    }
+    &[transition-type="slide-up"] {
+      &[transition-direction="forward"],
+      &[transition-direction="reverse"][hide] {
+        transform: translate(0, 100%);
+      }
+      &[transition-direction="reverse"],
+      &[transition-direction="forward"][hide] {
+        transform: translate(0, -100%);
+      }
+    }
+    &[transition-type="slide-down"] {
+      &[transition-direction="forward"],
+      &[transition-direction="reverse"][hide] {
+        transform: translate(0, -100%);
+      }
+      &[transition-direction="reverse"],
+      &[transition-direction="forward"][hide] {
+        transform: translate(0, 100%);
+      }
+    }
+    &[transition-type="slide-up"][transition],
+    &[transition-type="slide-down"][transition],
+    &[transition-type="slide-left"][transition],
+    &[transition-type="slide-right"][transition] {
+      transform: translate(0, 0);
+    }
+  }
+}

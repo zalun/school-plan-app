@@ -1,6 +1,11 @@
-Added html, body { height: 100% }
+Improvements:
+* switch between different school plans
 
-Brick Deck added to switch betweeen school plans (http://mozbrick.github.io/)
+Realization:
 
-cd  stage1
-bower install mozbrick/brick 
+Brick Deck added (http://mozbrick.github.io/)
+
+    cd  stage1
+    bower install mozbrick/brick 
+
+Added ```html, body { height: 100% }``` to make deck show something
