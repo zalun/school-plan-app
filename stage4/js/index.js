@@ -1,3 +1,9 @@
+document.onElementReady = function onElementReady(el, callback) {
+  if (el instanceof HTMLUnknownElement) {
+    return setTimeout(onElementReady, 100, el, callback);
+  }
+  callback.call(el);
+};
 var app = {
     planGroup: null,
     // Application Constructor
@@ -16,18 +22,22 @@ var app = {
         // changed without touching the menu
 
         app.planGroupMenu = document.getElementById('plan-group-menu');
-        for (var i=0; i < app.planGroupMenu.tabs.length; i++) {
-            var tab = app.planGroupMenu.tabs[i];
-            tab.target.addEventListener('show', function() {
-                tab.select();
-            });
-        }
+        // TODO: use the right hack
+        // https://github.com/WebReflection/document-register-element/issues/5#issuecomment-52433355
+        document.onElementReady(app.planGroupMenu, function() {
+            for (var i=0; i < app.planGroupMenu.tabs.length; i++) {
+                var tab = app.planGroupMenu.tabs[i];
+                tab.targetElement.tabElement = tab;
+                tab.targetElement.addEventListener('show', function() {
+                    this.tabElement.select();
+                });
+            }
+        });
         
-
         // Implementing one finger swipe to change deck card
         
         app.planGroup = document.getElementById('plan-group');
-        app.planGroup.loop = true;
+        // app.planGroup.loop = true;
 
         var startX = null;
         var slideThreshold = 100;
@@ -36,15 +46,17 @@ var app = {
         }
 
         function touchEnd(endX) {
-            var deltaX;
-            deltaX = endX - startX;
-            if (Math.abs(deltaX) > slideThreshold) {
-                if (deltaX > 0) {
-                    app.nextPlan();
-                } else {
-                    app.previousPlan();
+            if (startX) {
+                var deltaX;
+                deltaX = endX - startX;
+                if (Math.abs(deltaX) > slideThreshold) {
+                    startX = null;
+                    if (deltaX > 0) {
+                        app.previousPlan();
+                    } else {
+                        app.nextPlan();
+                    }
                 }
-                startX = endX;
             }
         }
 
@@ -62,11 +74,9 @@ var app = {
         });
     },
     previousPlan: function() {
-        console.log('previous');
         app.planGroup.previousCard();
     },
     nextPlan: function() {
-        console.log('next');
         app.planGroup.nextCard();
     }
 }
