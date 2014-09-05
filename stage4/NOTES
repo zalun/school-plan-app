@@ -1,4 +1,5 @@
 Improvements
+* Slide left/right to navigate
 * Add bar with the name of the plan
 
 Realization:
@@ -7,4 +8,4 @@ Realization:
     ln -fs ../stage3/ www
 
 Detecting one finger swipe
-Adding brick/tabbar
+Adding brick/appbar
