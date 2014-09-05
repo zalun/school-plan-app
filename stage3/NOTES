@@ -6,5 +6,5 @@ Realization:
     rm www
     ln -fs ../stage3/ www
 
-Detecting one finger swipe
-Adding brick/tabbar
+Added brick/tabbar
+Removed all additional JS - tabbar is switching the deck cards

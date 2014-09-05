@@ -11,17 +11,11 @@ var app = {
         app.receivedEvent('deviceready');
     },
     receivedEvent: function(id) {
-        // var logElement = document.getElementById('debug');
-        // function log(message) {
-        //     logElement.appendChild(document.createTextNode(message));
-        // }
-
         // Switching from one tab to another is done automatically
         // We just need to link it backwards - change menu if slides
         // changed without touching the menu
 
         app.planGroupMenu = document.getElementById('plan-group-menu');
-        console.log(app.planGroupMenu);
         for (var i=0; i < app.planGroupMenu.tabs.length; i++) {
             var tab = app.planGroupMenu.tabs[i];
             tab.target.addEventListener('show', function() {
@@ -55,7 +49,6 @@ var app = {
         }
 
         app.planGroup.addEventListener('touchstart', function(evt) {
-          console.log('touchstart');
             var touches = evt.changedTouches;
             if (touches.length == 1) {
                 touchStart(touches[0].pageX);
@@ -63,7 +56,6 @@ var app = {
         });
 
         app.planGroup.addEventListener('touchmove', function(evt) {
-          console.log('touchmove');
             // switched off scrolling on webkit
             evt.preventDefault(); 
             touchEnd(evt.changedTouches[0].pageX);
