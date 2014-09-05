@@ -1,9 +1,3 @@
-document.onElementReady = function onElementReady(el, callback) {
-  if (el instanceof HTMLUnknownElement) {
-    return setTimeout(onElementReady, 100, el, callback);
-  }
-  callback.call(el);
-};
 var app = {
     planGroup: null,
     // Application Constructor
@@ -22,9 +16,12 @@ var app = {
         // changed without touching the menu
 
         app.planGroupMenu = document.getElementById('plan-group-menu');
-        // TODO: use the right hack
-        // https://github.com/WebReflection/document-register-element/issues/5#issuecomment-52433355
-        document.onElementReady(app.planGroupMenu, function() {
+        // There is a need to wait until Polyfill upgrades process
+        function assignTabs() {
+            if (!app.planGroupMenu.tabs) {
+                // call itself until ready
+                return window.setTimeout(assignTabs, 100);
+            }
             for (var i=0; i < app.planGroupMenu.tabs.length; i++) {
                 var tab = app.planGroupMenu.tabs[i];
                 tab.targetElement.tabElement = tab;
@@ -32,7 +29,8 @@ var app = {
                     this.tabElement.select();
                 });
             }
-        });
+        };
+        assignTabs();
         
         // Implementing one finger swipe to change deck card
         

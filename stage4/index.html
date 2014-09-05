@@ -31,12 +31,11 @@
         <title>School Plan - Stage 4</title>
     </head>
     <body>
-        <brick-tabbar id="plan-group-menu" selected-index="0">
-            <brick-tabbar-tab target="tosia" selected>Tosia</brick-tabbar-tab>
-            <brick-tabbar-tab target="magda">Magda</brick-tabbar-tab>
-            <brick-tabbar-tab target="test">Test</brick-tabbar-tab>
+        <brick-tabbar id="plan-group-menu" selected-index="1">
+            <brick-tabbar-tab target="tosia">Tosia</brick-tabbar-tab>
+            <brick-tabbar-tab target="magda" selected>Magda</brick-tabbar-tab>
         </brick-tabbar>
-        <brick-deck id="plan-group" selected-index="0">
+        <brick-deck id="plan-group" selected-index="1">
           <brick-card selected id="tosia">
             <table>
               <thead>
@@ -102,7 +101,7 @@
             </table>
           </brick-card>
 
-          <brick-card id="magda">
+          <brick-card id="magda" selected>
             <table>
               <thead>
                 <tr> 
@@ -181,9 +180,6 @@
                 </tr>
               </tbody>
             </table>
-          </brick-card>
-          <brick-card id="test">
-              <h2>Test</h2>
           </brick-card>
         </brick-deck>
         <script type="text/javascript" src="cordova.js"></script>
