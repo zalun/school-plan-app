@@ -47,6 +47,7 @@ The documentation http://mozbrick.github.io/docs/brick-deck.html provides the in
 ```html
 	<script src="app/bower_components/brick/dist/platform/platform.js"></script>
 	<link rel="import" href="app/bower_components/brick-deck/dist/brick-deck.html">
+```
 
 All plans need to be wrapped inside ```<brick-deck>``` and every plan inside ```<brick-card>```.
 
@@ -65,6 +66,11 @@ If you'd test the application the first card should be visible while the other r
     window.onload = function() { 
         app.initialize(); 
     }
+```
+
+Cordova adds a few events. One of which being the ```deviceready``` fired after all Cordova is loaded and initiated. Let's put ation code inside this event's callback - ```app.onDeviceReady```.
+
+Cards will switch on ```touchstart``` event. 
 
 ## Stage 3
 
