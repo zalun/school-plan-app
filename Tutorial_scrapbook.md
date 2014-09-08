@@ -53,12 +53,16 @@ All plans need to be wrapped inside ```<brick-deck>``` and every plan inside ```
 
 To make it visible there is a need to set the height of ```html``` and ```body``` elements. Certainly the place to set this parameter is the ```css/index.css``` file.
 
+```css
     html, body {height: 100%}
+```
 
 If you'd test the application the first card should be visible while the other remain hidden.  Because we need to somehow switch the cards JavaScript will be added to the app.
 
+```html
 	<script type="text/javascript" src="cordova.js"></script>
 	<script type="text/javascript" src="js/index.js"></script>
+```
 
 ```index.js``` has a definition of an ```app``` variable. App is running after calling ```app.initialize()```. It's a good idea to call this when ```window``` is loaded:
 
