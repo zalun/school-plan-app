@@ -74,7 +74,7 @@ If you'd test the application the first card should be visible while the other r
 
 Cordova adds a few events. One of which being the ```deviceready``` fired after all Cordova is loaded and initiated. Let's put ation code inside this event's callback - ```app.onDeviceReady```.
 
-Cards will switch on ```touchstart``` event. 
+Brick adds a few functions and attributes to all its elements. In this case ```deck.loop``` and ```deck.nextCard``` is used. Deck element is instantiated with ```<brick-deck id="plan-group">``` tag, the appropriate way to get this element from the DOM is ```document.getElementById```. Cards will switch on ```touchstart``` event. 
 
 ## Stage 3
 
