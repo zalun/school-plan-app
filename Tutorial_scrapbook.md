@@ -64,7 +64,7 @@ To make it visible there is a need to set the height of ```html``` and ```body``
     html, body {height: 100%}
 ```
 
-If you'd test the application the first card should be visible while the other remain hidden.  Because we need to somehow switch the cards JavaScript will be added to the app.
+If you'd test the application the first card should be visible while the other remain hidden.  Because we need to switch the cards JavaScript will be added to the app.
 
 ```html
 	<script type="text/javascript" src="cordova.js"></script>
@@ -96,7 +96,6 @@ Use Brick's ```brick-tabbar```. http://mozbrick.github.io/docs/brick-tabbar.html
 To do so you need to import the ```brick-tabbar``` component. Brick part of the ```<head>``` will look as follows:
 
 ```html
-     
 	<script src="app/bower_components/brick/dist/platform/platform.js"></script>
 	<link rel="import" href="app/bower_components/brick-deck/dist/brick-deck.html">
 	<link rel="import" href="app/bower_components/brick-tabbar/dist/brick-tabbar.html">
@@ -116,3 +115,37 @@ Add an id to all cards and mention it as target attribute of ```brick-tabbar-tab
 
 The app got simplier. No JavaScript is needed. ```nextCard``` is called by Brick behind the scene using tab's ```reveal``` event. The cards will change when tabbar element is touched.
 
+## Stage 4
+
+### Improvement
+
+1. Slide left/right to navigate
+
+### Realization
+
+Javascript needs to be used again.
+
+```html
+	<script type="text/javascript" src="cordova.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+```
+
+Switching ```deck``` ```card``` is done by ```tabbar``` component. To keep ```tabbar``` in sync with current ```card``` you need to link them. It is done by listening to the ```show``` event of each ```card```.
+
+```js
+	tab.targetElement.addEventListener('show', function() {
+		this.tabElement.select();
+	});
+```
+
+Because of the race condition (```planGroupMenu.tabs``` might not exist when app is initialized) polling is used to wait until the right moment.
+
+```js
+	function assignTabs() {
+		if (!app.planGroupMenu.tabs) {
+			return window.setTimeout(assignTabs, 100);
+        } 
+        // proceed
+```
+
+Detecting one finger swipe is pretty easy for Firefox OS. One listen to check the ```touchstart``` and ```touchend``` events and the ```pageX``` parameter. Unfortunately Android and iOS do not fire the ```touchend``` event if finger has moved. Also, ```touchmove``` is fired only once as it's intercepted by ```scroll``` event. Hence ```preventDefault()``` is called in ```touchmove``` callback.
