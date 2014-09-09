@@ -119,7 +119,7 @@ The app got simplier. No JavaScript is needed. ```nextCard``` is called by Brick
 
 ### Improvement
 
-1. Slide left/right to navigate
+1. Slide left/right to navigate betweeen cards
 
 ### Realization
 
