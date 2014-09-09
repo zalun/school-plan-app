@@ -8,9 +8,6 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
     onDeviceReady: function() {
-        app.receivedEvent('deviceready');
-    },
-    receivedEvent: function(id) {
         // Switching from one tab to another is done automatically
         // We just need to link it backwards - change menu if slides
         // changed without touching the menu
