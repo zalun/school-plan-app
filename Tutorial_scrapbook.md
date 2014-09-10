@@ -86,7 +86,7 @@ If you'd test the application the first card should be visible while the other r
     }
 ```
 
-Cordova adds few events. One of which being the ```deviceready``` fired after all Cordova is loaded and initiated. Let's put ation code inside this event's callback - ```app.onDeviceReady```.
+Cordova adds few events. One of which being the ```deviceready``` fired after all Cordova is loaded and initiated. Let's put action code inside this event's callback - ```app.onDeviceReady```.
 
 Brick adds a few functions and attributes to all its elements. In this case ```loop``` and ```nextCard``` is added to deck element. As it is here created with ```<brick-deck id="plan-group">``` tag, the appropriate way to get this element from the DOM is ```document.getElementById```. We want the cards will switch on ```touchstart``` event, ```nextCard``` will be called from the callback ```app.nextPlan```. 
 
@@ -155,4 +155,42 @@ Because of the race condition (```planGroupMenu.tabs``` might not exist when app
         // proceed
 ```
 
-Detecting one finger swipe is pretty easy for Firefox OS. One listen to check the ```touchstart``` and ```touchend``` events and the ```pageX``` parameter. Unfortunately Android and iOS do not fire the ```touchend``` event if finger has moved. Also, ```touchmove``` is fired only once as it's intercepted by ```scroll``` event. Hence ```preventDefault()``` is called in ```touchmove``` callback.
+Detecting one finger swipe is pretty easy for Firefox OS. Two callbacks to to listen to the ```touchstart``` and ```touchend``` events and calculating the delta on the ```pageX``` parameter. Unfortunately Android and iOS do not fire the ```touchend``` event if finger has moved. The obvious move would be to listen to ```touchmove``` event, but that one is fired only once as it's intercepted by ```scroll``` event. Hence ```preventDefault()``` is called in ```touchmove``` callback. That way ```scroll``` is switched off.
+
+```js
+	var startX = null;
+	var slideThreshold = 100;
+
+	function touchStart(sX) {
+		startX = sX;
+	}
+
+	function touchEnd(endX) {
+		var deltaX;
+		if (startX) {
+			deltaX = endX - startX;
+			if (Math.abs(deltaX) > slideThreshold) {
+				startX = null;
+				if (deltaX > 0) {
+					app.previousPlan();
+				} else {
+					app.nextPlan();
+				}
+			}
+		}
+	}
+
+	app.planGroup.addEventListener('touchstart', function(evt) {
+		var touches = evt.changedTouches;
+		if (touches.length == 1) {
+			touchStart(touches[0].pageX);
+		}
+	});
+
+	app.planGroup.addEventListener('touchmove', function(evt) {
+		evt.preventDefault(); 
+		touchEnd(evt.changedTouches[0].pageX);
+	});
+```
+
+As for the moment displaying the plans is done - you may add more of the plans as long as it fits on the screen. There will be no need to change JavaScript.

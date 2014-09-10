@@ -32,17 +32,17 @@ var app = {
         // Implementing one finger swipe to change deck card
         
         app.planGroup = document.getElementById('plan-group');
-        // app.planGroup.loop = true;
 
         var startX = null;
         var slideThreshold = 100;
+
         function touchStart(sX) {
             startX = sX;
         }
 
         function touchEnd(endX) {
+            var deltaX;
             if (startX) {
-                var deltaX;
                 deltaX = endX - startX;
                 if (Math.abs(deltaX) > slideThreshold) {
                     startX = null;
@@ -58,6 +58,7 @@ var app = {
         app.planGroup.addEventListener('touchstart', function(evt) {
             var touches = evt.changedTouches;
             if (touches.length == 1) {
+                // only one finger swipe is important for us
                 touchStart(touches[0].pageX);
             }
         });
