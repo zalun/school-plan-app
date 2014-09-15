@@ -35,7 +35,7 @@ To test the app add a ```firefoxos``` platform and prepare the application. The 
     cordova platform add firefoxos
     cordova prepare
 
-You may find the prepared app in ```school-plan/platforms/firefoxos/www```. Open the ```about:app-manager``` in Firefox browser. [Add Packaged App] and navigate to the prepared app directory. [Start Simulator] and you will see the app performing. You can inspect, debug and profile.
+You should be able find the prepared app in ```school-plan/platforms/firefoxos/www```. Open the ```about:app-manager``` in Firefox browser. [Add Packaged App] and navigate to the prepared app directory. [Start Simulator] and you will see the app performing. You can inspect, debug and profile.
 
 To export the app to Android add the platform and let Cordova build apk file
 
