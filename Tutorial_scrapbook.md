@@ -235,9 +235,10 @@ Detecting one finger swipe is pretty easy for Firefox OS. Two callbacks to to li
 	});
 
 	app.planGroup.addEventListener('touchmove', function(evt) {
+	    // stop scroll event intercepting touchmove
 		evt.preventDefault(); 
 		touchEnd(evt.changedTouches[0].pageX);
 	});
 ```
 
-As for the moment displaying the plans is done - you may add more of the plans as long as it fits on the screen. There will be no need to change JavaScript.
+You may add more of the plans as long as it's name fits on the screen in the tabbar. Actions will be assigned automatically.
