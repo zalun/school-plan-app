@@ -66,7 +66,7 @@ The app's is build in ```school-plan/platforms/android/ant-build/SchoolPlan-debu
 
 
 ![Stage1 Result Screenshot
-](./images/stage1-result.png)
+](./images/stage1-result.gif)
 
 ## Stage 2
 
