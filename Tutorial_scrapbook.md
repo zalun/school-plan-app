@@ -4,19 +4,32 @@ We will write an app from a simple HTML site.
 
 I've got two kids and I'm always forgetting their school plan. Certainly I could copy the HTML to JSFiddle and load the plan as a website - https://hacks.mozilla.org/2013/08/using-jsfiddle-to-prototype-firefox-os-apps/ Unfortunately this will not load offline and (for now) will not work on iOS.
 
-## Requirements
+## What will we build
 
-1. Display multiple school plans. 
+A mobile application which will:
+
+1. Display school plan(s). 
 2. Work offline
-3. Platform agnostic
+3. Work on many platforms
 
-## Note
+## Prerrequisites
 
-Please read https://github.com/zalun/school-plan-app/blob/master/README.md for instructions how to load any stage.
+Some HTML5 knowledge.
 
-For detailed Cordova instructions please read  http://cordova.apache.org/docs/en/edge/index.html
+> Please read https://github.com/zalun/school-plan-app/blob/master/README.md for instructions how to load any stage.
+> For detailed Cordova instructions please read  http://cordova.apache.org/docs/en/edge/index.html
+
+## Preparation
+
+In this tutorial we will use Cordova which is a NodeJS project. You should have it installed before Stage 1. First <a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">install NodeJS</a>. Then install Cordova globally using ```npm``` package manager. On my systems (ubuntu or OSX):
+
+    sudo npm install cordova -g
+
+You also need to have <a href="https://www.mozilla.org/en-US/firefox/new/">latest Firefox</a> installed.
 
 ## Stage 1
+
+
 
 ### Requirement
 
