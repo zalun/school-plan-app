@@ -62,7 +62,7 @@ To export the app to Android add the platform and let Cordova build apk file
     cordova platform add android
     cordova platform build android
 
-The app's is build in ```school-plan/platforms/android/ant-build/SchoolPlan-debug.apk```
+The app is build in ```school-plan/platforms/android/ant-build/SchoolPlan-debug.apk```
 
 
 ![Stage1 Result Screenshot
