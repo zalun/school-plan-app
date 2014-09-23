@@ -242,3 +242,6 @@ Detecting one finger swipe is pretty easy for Firefox OS. Two callbacks to to li
 ```
 
 You may add more of the plans as long as it's name fits on the screen in the tabbar. Actions will be assigned automatically.
+
+![Stage1 Result Screenshot
+](./images/stage4-result.gif)
