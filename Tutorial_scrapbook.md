@@ -1,10 +1,10 @@
-We will write an app from a simple HTML site.
+# Write a mobile app from a simple HTML site.
 
 ## Story
 
-I've got two kids and I'm always forgetting their school plan. Certainly I could copy the HTML to JSFiddle and load the plan as a website - https://hacks.mozilla.org/2013/08/using-jsfiddle-to-prototype-firefox-os-apps/ Unfortunately this will not load offline and (for now) will not work on iOS.
+I've got two kids and I'm always forgetting their school plan. Certainly I could copy the HTML to JSFiddle and load the plan as firefox app - https://hacks.mozilla.org/2013/08/using-jsfiddle-to-prototype-firefox-os-apps/ Unfortunately this will not load offline and (for now) will not work on iOS.
 
-## What will we build
+## Target
 
 A mobile application which will:
 
@@ -12,28 +12,33 @@ A mobile application which will:
 2. Work offline
 3. Work on many platforms
 
-## Prerrequisites
+## Prerequisites
 
-Some HTML5 knowledge.
+You just need to have some HTML5 knowledge.
 
-> Please read https://github.com/zalun/school-plan-app/blob/master/README.md for instructions how to load any stage.
-> For detailed Cordova instructions please read  http://cordova.apache.org/docs/en/edge/index.html
+> Please read <A href="https://github.com/zalun/school-plan-app/blob/master/README.md">instructions</a> how to load any stage in this tutorial.
+> 
+> Detailed <a href="http://cordova.apache.org/docs/en/edge/index.html">Cordova documentation</a> is always a good thing to read.
 
 ## Preparation
 
-In this tutorial we will use Cordova which is a NodeJS project. You should have it installed before Stage 1. First <a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">install NodeJS</a>. Then install Cordova globally using ```npm``` package manager. On my systems (ubuntu or OSX):
+In this tutorial we will use Cordova which is a NodeJS project. You should have it installed before Stage 1. First <a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">install NodeJS</a>. Then install Cordova globally using ```npm``` package manager. On my systems (Ubuntu or OSX):
 
-    sudo npm install cordova -g
+    npm install -g cordova
 
 You also need to have <a href="https://www.mozilla.org/en-US/firefox/new/">latest Firefox</a> installed.
 
+To install Brick we will need also Bower
+
+    npm install -g bower
+
+Copy the HTML code of the school plans to a separate file.
+
 ## Stage 1
 
+### Goal
 
-
-### Requirement
-
-1. Display the school plans in plain HTML
+Display the school plans in plain HTML
 
 ### Realization
 
@@ -41,21 +46,27 @@ Start with plain Cordova project
     
     cordova create school-plan com.example.schoolplan SchoolPlan
 
-Open ```index.html``` from ```school-plan``` directory and remove everything from ```<body>``` element.  Copy the desired school plan(s) into separate elemets. I've chosen ```<table>```.  Change styling in ```css/index.css```. There is no JavaScript used in this stage.
+```school-plan``` directory with some files has been created. Open ```index.html``` and remove everything from ```<body>``` element.  Copy the desired school plan(s) into separate elemets. I've chosen ```<table>```.  Change styling in ```css/index.css```. There is no JavaScript used in this stage.
 
 To test the app add a ```firefoxos``` platform and prepare the application. The last step is needed every time you want to check the changes.
 
     cordova platform add firefoxos
     cordova prepare
 
-You should be able find the prepared app in ```school-plan/platforms/firefoxos/www```. Open the ```about:app-manager``` in Firefox browser. [Add Packaged App] and navigate to the prepared app directory. [Start Simulator] and you will see the app performing. You can inspect, debug and profile.
+You should be able to find the prepared app in ```school-plan/platforms/firefoxos/www```. Open the <a href="about:app-manager">App Manager</a> in Firefox browser. [Add Packaged App] and navigate to the prepared app directory. [Start Simulator] and you will see the app performing. You can inspect, debug and profile.
 
+![App Manager buttons
+](./images/app-manager-1.png)
 To export the app to Android add the platform and let Cordova build apk file
 
     cordova platform add android
     cordova platform build android
 
-The file is in ```school-plan/platforms/android/ant-build/SchoolPlan-debug.apk```
+The app's is build in ```school-plan/platforms/android/ant-build/SchoolPlan-debug.apk```
+
+
+![Stage1 Result Screenshot
+](./images/stage1-result.png)
 
 ## Stage 2
 
@@ -65,11 +76,11 @@ The file is in ```school-plan/platforms/android/ant-build/SchoolPlan-debug.apk``
 
 ### Realization
 
-Use Brick http://mozbrick.github.io/. Especially the ```brick-deck``` tag.  This will allow to display one ```brick-card``` while hiding other. Following command will install entire Brick into the ```app/bower_components``` directory.
+Use <a href="http://mozbrick.github.io/">Brick</a>. Actually only the ```brick-deck``` component.  This will allow to display one ```brick-card``` while hiding the other. Run the following command to install entire Brick into the ```app/bower_components``` directory.
 
     bower install mozbrick/brick 
 
-The documentation http://mozbrick.github.io/docs/brick-deck.html provides the info how to switch the deck on. Be careful as it says to add ```src/brick-deck.html```, where in fact ```dist/brick-deck.html``` is needed. Following needs to be added to the ```<head>``` setcion in ```index.html``` file:
+The <a href="http://mozbrick.github.io/docs/brick-deck.html">documentation</a>  provides the info how to switch the deck on. It says to add ```src/brick-deck.html```, where in fact ```dist/brick-deck.html``` is needed. Following code needs to be added to the ```<head>``` section in ```index.html``` file:
 
 ```html
 	<script src="app/bower_components/brick/dist/platform/platform.js"></script>
@@ -78,13 +89,28 @@ The documentation http://mozbrick.github.io/docs/brick-deck.html provides the in
 
 All plans need to be wrapped inside ```<brick-deck>``` and every plan inside ```<brick-card>```.
 
-To make it visible there is a need to set the height of ```html``` and ```body``` elements. Certainly the place to set this parameter is the ```css/index.css``` file.
+```html
+    <brick-deck id="plan-group">
+        <brick-card>
+            <table>
+            <!-- school plan 1 -->
+            </table>
+        </brick-card>
+        <brick-card>
+            <table>
+            <!-- school plan 2 -->
+            </table>
+        </brick-card>
+    </brick-deck>
+```
+
+This component requires to set the height of ```html``` and ```body``` elements. Add these to the ```css/index.css``` file.
 
 ```css
     html, body {height: 100%}
 ```
 
-If you'd test the application the first card should be visible while the other remain hidden.  Because we need to switch the cards JavaScript will be added to the app.
+If you'd run the application the first card should be visible while the other remain hidden. As there is a need to switch the cards JavaScript will be added to the app.
 
 ```html
 	<script type="text/javascript" src="cordova.js"></script>
@@ -99,9 +125,13 @@ If you'd test the application the first card should be visible while the other r
     }
 ```
 
-Cordova adds few events. One of which being the ```deviceready``` fired after all Cordova is loaded and initiated. Let's put action code inside this event's callback - ```app.onDeviceReady```.
+Cordova adds few events. One of which being the ```deviceready``` fired after all Cordova code is loaded and initiated. Let's put main app action code inside this event's callback - ```app.onDeviceReady```.
 
-Brick adds a few functions and attributes to all its elements. In this case ```loop``` and ```nextCard``` is added to deck element. As it is here created with ```<brick-deck id="plan-group">``` tag, the appropriate way to get this element from the DOM is ```document.getElementById```. We want the cards will switch on ```touchstart``` event, ```nextCard``` will be called from the callback ```app.nextPlan```. 
+Brick adds a few functions and attributes to all its elements. In this case ```loop``` and ```nextCard``` is added to deck element. As it is here created with ```<brick-deck id="plan-group">``` tag, the appropriate way to get this element from the DOM is ```document.getElementById```. We want the cards will switch on ```touchstart``` event, ```nextCard``` will be called from the callback ```app.nextPlan```.
+
+ 
+![Stage2 Result Animation
+](./images/stage2-result.gif)
 
 ## Stage 3
 
@@ -111,7 +141,7 @@ Brick adds a few functions and attributes to all its elements. In this case ```l
 
 ### Realization
 
-Use Brick's ```brick-tabbar```. http://mozbrick.github.io/docs/brick-tabbar.html
+We will use Brick's component <a href="http://mozbrick.github.io/docs/brick-tabbar.html">```brick-tabbar```</a>. 
 
 To do so you need to import the ```brick-tabbar``` component. Brick part of the ```<head>``` will look as follows:
 
@@ -133,7 +163,11 @@ Add an id to all cards and mention it as target attribute of ```brick-tabbar-tab
       ...
 ```
 
-The app got simplier. No JavaScript is needed. ```nextCard``` is called by Brick behind the scene using tab's ```reveal``` event. The cards will change when tabbar element is touched.
+The app got simplier. No JavaScript is needed you can safely remove it from the ```index.html```. Deck's ```nextCard``` method is called by Brick behind the scene using tab's ```reveal``` event. The cards will change when tabbar element is touched.
+
+
+![Stage2 Result Animation
+](./images/stage3-result.gif)
 
 ## Stage 4
 
