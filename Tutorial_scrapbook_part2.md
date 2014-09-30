@@ -111,6 +111,8 @@ To create the UI we will need weekday names. The best option is to use Cordova's
 
     cordova plugin add org.apache.cordova.globalization
     
+Week days are retrieved using ```navigator.globalization.getDateNames```:
+    
 ```js
 createUI: function(plans) {
     var deck = document.getElementById('plan-group');
@@ -119,6 +121,25 @@ createUI: function(plans) {
     // render UI
 ```
 
+Creating ```table``` and ```thead``` elements. (The empty ```th``` is needed for the numbers):
+
+```js
+for (var i = 0; i < plans.length; i++) {
+    var plan = plans[i];
+    var table = document.createElement('table');
+    var thead = document.createElement('thead');
+    var th_empty = document.createElement('th');
+    thead.appendChild(th_empty);
+    for (var j = 0; j < plan.week.length; j++) {
+        if (plan.week[j]) {
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode(dayOfWeek.value[j]));
+            thead.appendChild(th);
+        }
+    }
+    table.appendChild(thead);
+// render data in tbody
+```
 
 
 The result is almost the same as from Stage4. The only difference being short weekday names.
