@@ -112,7 +112,8 @@ To create the UI we will need weekday names. The best option is to use Cordova's
 ```js
     createUI: function(plans) {
         var deck = document.getElementById('plan-group');
-        var tabbar = document.getElementById('plan-group-menu');        navigator.globalization.getDateNames(function(dayOfWeek){
+        var tabbar = document.getElementById('plan-group-menu');        
+        navigator.globalization.getDateNames(function(dayOfWeek){
         // ...
 ```
 
