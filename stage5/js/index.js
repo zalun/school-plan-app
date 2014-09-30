@@ -7,6 +7,16 @@ var app = {
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
+    renderData: function(textData) {
+        // this.result is the file content
+        var plans = [];
+        try {
+            plans = JSON.parse(this.result);
+        } catch(e) {
+            console.log('DEBUG: Unable to parse the JSON file');
+        }
+        app.createUI(plans);
+    },
     createUI: function(plans) {
         var deck = document.getElementById('plan-group');
         var tabbar = document.getElementById('plan-group-menu');
@@ -94,16 +104,7 @@ var app = {
                     // read entry
                     console.log(file);
                     var reader = new FileReader();
-                    reader.onloadend = function() {
-                        // this.result is the file content
-                        var plans;
-                        try {
-                            plans = JSON.parse(this.result);
-                        } catch(e) {
-                            console.log('DEBUG: Unable to parse the JSON file');
-                        }
-                        app.createUI(plans);
-                    }; 
+                    reader.onloadend = app.renderData;
                     reader.readAsText(file);
                 }, function(error) {
                     console.log('DEBUG: Failed to read ``data/plans.json`` file', error);
