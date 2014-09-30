@@ -22,17 +22,19 @@ You just need to have some HTML5 knowledge.
 
 ## Preparation
 
-In this tutorial we will use Cordova which is a NodeJS project. You should have it installed before Stage 1. First <a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">install NodeJS</a>. Then install Cordova globally using ```npm``` package manager. On my systems (Ubuntu or OSX):
+I've decided to use Cordova as it's currently the best free tool which delivers HTML apps to many platforms. Cordova is a NodeJS project. You should have it installed before Stage 1. First <a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">install NodeJS</a>. Then install Cordova globally using ```npm``` package manager. On my systems (Ubuntu or OSX):
 
     npm install -g cordova
 
 You also need to have <a href="https://www.mozilla.org/en-US/firefox/new/">latest Firefox</a> installed.
 
+Brick is a tool build for app developers. It's a set of ready to use web components. It's created at Mozilla and is extremely easy to use.
+
 To install Brick we will need also Bower
 
     npm install -g bower
 
-Copy the HTML code of the school plans to a separate file.
+Find the school site and copy the HTML code of the plans to a separate file.
 
 ## Stage 1
 
