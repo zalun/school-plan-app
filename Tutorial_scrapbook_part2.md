@@ -42,10 +42,10 @@ I assume Cordova and Bower are installed and working
 Remove old data from ```www/index.html``` leaving only the minimal structure. Certainly this also could be created using JavaScript, but I think it's better to have some HTML.
 
 ```html
-    <brick-tabbar id="plan-group-menu">
-    </brick-tabbar>
-    <brick-deck id="plan-group">
-    </brick-deck>
+<brick-tabbar id="plan-group-menu">
+</brick-tabbar>
+<brick-deck id="plan-group">
+</brick-deck>
 ```
 
 To prepare for data being pulled from another system there is a need to have a way to read them. Most common data structure used in JavaScript project is JSON.
@@ -87,22 +87,22 @@ As both cards and tabs do not exist at the moment of loading the JavaScript file
 I'm using a standard ```XMLHttpRequest```
 
 ```js     
-    var request = new XMLHttpRequest();
-    request.onload = app.renderData;
-    request.open("get", "app_data/plans.json", true);
-    request.send();
+var request = new XMLHttpRequest();
+request.onload = app.renderData;
+request.open("get", "app_data/plans.json", true);
+request.send();
 ```
 
 Where ```app.renderData``` parses the JSON and sends data to ```app.createUI``` so UI will be created on its basis.
 
 ```js
-    renderData: function() {
-        var plans = [];
-        try {
-            plans = JSON.parse(this.responseText);
-        } catch(e) {}
-        app.createUI(plans);
-    },
+renderData: function() {
+    var plans = [];
+    try {
+        plans = JSON.parse(this.responseText);
+    } catch(e) {}
+    app.createUI(plans);
+},
 ```
 
 To create the UI we will need weekday names. The best option is to use Cordova's <a href="https://github.com/apache/cordova-plugin-globalization/blob/master/doc/index.md">Globalization plugin</a>.
@@ -110,12 +110,14 @@ To create the UI we will need weekday names. The best option is to use Cordova's
     cordova plugin add org.apache.cordova.globalization
     
 ```js
-    createUI: function(plans) {
-        var deck = document.getElementById('plan-group');
-        var tabbar = document.getElementById('plan-group-menu');        
-        navigator.globalization.getDateNames(function(dayOfWeek){
-        // ...
+createUI: function(plans) {
+    var deck = document.getElementById('plan-group');
+    var tabbar = document.getElementById('plan-group-menu');        
+    navigator.globalization.getDateNames(function(dayOfWeek){
+    // render UI
 ```
+
+
 
 The result is almost the same as from Stage4. The only difference being short weekday names.
 
