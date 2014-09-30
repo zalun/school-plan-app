@@ -10,12 +10,14 @@ I've got two kids with a different school plans. We're using iOS and Android dev
 
 A mobile application which will:
 
-(Copied from previous chapter)
+(*Copied from previous chapter*)
+
 1. Display school plan(s). 
 2. Work offline
 3. Work on many platforms
 
-(New goal)
+(*New goal*)
+
 4. Download school plans from a server
 
 ## Prerequisites
