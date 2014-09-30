@@ -119,7 +119,10 @@ createUI: function(plans) {
     var tabbar = document.getElementById('plan-group-menu');        
     navigator.globalization.getDateNames(function(dayOfWeek){
     // render UI
+    }, function() {}, {type: 'narrow', item: 'days'});
 ```
+If you'd like to use full day names, just change ```type: 'narrow'``` to ```type: 'wide'```.
+
 
 Creating ```table``` and ```thead``` elements. (The empty ```th``` is needed for the numbers):
 
@@ -138,9 +141,77 @@ for (var i = 0; i < plans.length; i++) {
         }
     }
     table.appendChild(thead);
-// render data in tbody
+    // ...
 ```
 
+Now we're reaching to an issue - we're representing the plan per day and then per hour. Unfortunately tables in HTML are created row by row which means the array needs to be rotated
+
+```js
+var daysInHours = [];
+for (var j = 0; j < plan.week.length; j++) {
+    for (var k = 0; k < plan.week[j].length; k++) {
+        if (!daysInHours[k]) {
+            daysInHours[k] = [];
+        }
+        daysInHours[k][j] = plan.week[j][k];
+    }
+}
+```
+
+Now daysInHours array can be easily used to render the plan into HTML table:
+
+```js
+for (var j = 0; j < daysInHours.length; j++) {
+    var tr = document.createElement('tr');
+    var td = document.createElement('td');
+    tr.appendChild(td);
+    td.appendChild(document.createTextNode(j + 1));
+    for (var k = 0; k < daysInHours[j].length; k++) {
+        var td = document.createElement('td');
+        if (daysInHours[j][k]) {
+            td.appendChild(document.createTextNode(daysInHours[j][k]));
+        }
+        tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+}
+```
+
+At the end the table needs to placed inside ```brick-card``` element:
+
+```js
+var card = document.createElement('brick-card');
+card.setAttribute('id', plan.id);
+card.appendChild(table);
+deck.appendChild(card); 
+```
+
+```brick-tabbar-tab``` has to display the names of the plans:
+
+```js
+var tab = document.createElement('brick-tabbar-tab');
+tab.setAttribute('target', plan.id);
+tab.appendChild(document.createTextNode(plan.title));
+tabbar.appendChild(tab);
+```
+
+The right tab needs to be selected:
+
+```js
+if (plan.active) {
+    var activeTab = tab;
+    window.setTimeout(function() {activeTab.select()}, 0);
+}
+```
+
+And lastly - switching cards needs to link back to the right tabs:
+
+```js
+card.tabElement = tab;
+card.addEventListener('show', function() {
+    this.tabElement.select();
+});
+```
 
 The result is almost the same as from Stage4. The only difference being short weekday names.
 
