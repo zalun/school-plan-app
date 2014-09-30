@@ -78,26 +78,44 @@ I've placed the data in ```www/data/plans.json``` file. It contains an ```Array`
 ```
 
 
-Now there is a need to read this JSON file from the app's directory. To do so there is a need to add a Cordova's <a href="http://plugins.cordova.io/#/package/org.apache.cordova.file">FileSystem plugin</a>.
+Now there is a need to read this JSON file from the app's directory. 
 
-    cordova plugin add org.apache.cordova.core.file
+> Previously I planned to use Cordova's <a href="http://plugins.cordova.io/#/package/org.apache.cordova.file">FileSystem plugin</a>, but it only made the code more complicated.
 
 As both cards and tabs do not exist at the moment of loading the JavaScript file I've removed from ```www/js/index.js``` part where these were linked together.
 
-FileSystem plugin provides ```cordova.file.applicationDirectory``` which is a getter returning the app's directory location in current system. Reading the file (in ```app.deviceReady```):
+I'm using a standard ```XMLHttpRequest```
 
 ```js     
-window.resolveLocalFileSystemURL(
-    cordova.file.applicationDirectory + 'data/plans.json',
-    function(entry) {
-        entry.file(function(file){
-        	var reader = new FileReader();
-        	reader.onloadend = app.renderData;
-        	reader.readAsText(file);
-        });
-    });
+    var request = new XMLHttpRequest();
+    request.onload = app.renderData;
+    oReq.open("get", "app_data/plans.json", true);
+    oReq.send();
 ```
 
+Where ```app.renderData``` parses the JSON and sends data to ```app.createUI``` so UI will be created on its basis.
+
+```js
+    renderData: function() {
+        // this.result is the file content
+        var plans = [];
+        try {
+            plans = JSON.parse(this.result);
+        } catch(e) {}
+        app.createUI(plans);
+    },
+```
+
+To create the UI we will need weekday names. The best option is to use Cordova's <a href="https://github.com/apache/cordova-plugin-globalization/blob/master/doc/index.md">Globalization plugin</a>.
+
+    cordova plugin add org.apache.cordova.globalization
+    
+```js
+    createUI: function(plans) {
+        var deck = document.getElementById('plan-group');
+        var tabbar = document.getElementById('plan-group-menu');        navigator.globalization.getDateNames(function(dayOfWeek){
+        // ...
+```
 
 The result is almost the same as from Stage4. The only difference being short weekday names.
 

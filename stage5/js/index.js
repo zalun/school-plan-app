@@ -7,11 +7,11 @@ var app = {
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
-    renderData: function(textData) {
-        // this.result is the file content
+    renderData: function() {
+        // this.responseText is the file content
         var plans = [];
         try {
-            plans = JSON.parse(this.result);
+            plans = JSON.parse(this.responseText);
         } catch(e) {
             console.log('DEBUG: Unable to parse the JSON file');
         }
@@ -20,10 +20,8 @@ var app = {
     createUI: function(plans) {
         var deck = document.getElementById('plan-group');
         var tabbar = document.getElementById('plan-group-menu');
-        console.log('a');
         // using day of the week in current language
         navigator.globalization.getDateNames(function(dayOfWeek){
-            console.log(dayOfWeek, plans.length);
             for (var i = 0; i < plans.length; i++) {
                 var plan = plans[i];
                 // create plan table
@@ -98,21 +96,13 @@ var app = {
     onDeviceReady: function() {
         // Load plans from JSON
         // Get access to data/plans.json file
-        window.resolveLocalFileSystemURL(cordova.file.applicationDirectory + 'data/plans.json',
-            function(entry) {
-                entry.file(function(file){
-                    // read entry
-                    console.log(file);
-                    var reader = new FileReader();
-                    reader.onloadend = app.renderData;
-                    reader.readAsText(file);
-                }, function(error) {
-                    console.log('DEBUG: Failed to read ``data/plans.json`` file', error);
-                });
-            }, function(error) {
-                console.log('DEBUG: Failed to get ``data/plans.json`` file', error);
-            }
-        );
+        var request = new XMLHttpRequest();
+        request.onload = app.renderData;
+        request.onerror = function(error) {
+            console.log('DEBUG: Failed to get ``app_data/plans.json`` file', error);
+        };
+        oReq.open("get", "app_data/plans.json", true);
+        oReq.send();
 
         // Implementing one finger swipe to change deck card
         app.planGroup = document.getElementById('plan-group');
