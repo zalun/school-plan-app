@@ -89,18 +89,17 @@ I'm using a standard ```XMLHttpRequest```
 ```js     
     var request = new XMLHttpRequest();
     request.onload = app.renderData;
-    oReq.open("get", "app_data/plans.json", true);
-    oReq.send();
+    request.open("get", "app_data/plans.json", true);
+    request.send();
 ```
 
 Where ```app.renderData``` parses the JSON and sends data to ```app.createUI``` so UI will be created on its basis.
 
 ```js
     renderData: function() {
-        // this.result is the file content
         var plans = [];
         try {
-            plans = JSON.parse(this.result);
+            plans = JSON.parse(this.responseText);
         } catch(e) {}
         app.createUI(plans);
     },

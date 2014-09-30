@@ -101,8 +101,8 @@ var app = {
         request.onerror = function(error) {
             console.log('DEBUG: Failed to get ``app_data/plans.json`` file', error);
         };
-        oReq.open("get", "app_data/plans.json", true);
-        oReq.send();
+        request.open("get", "app_data/plans.json", true);
+        request.send();
 
         // Implementing one finger swipe to change deck card
         app.planGroup = document.getElementById('plan-group');
