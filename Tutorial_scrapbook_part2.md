@@ -249,17 +249,21 @@ th.appendChild(document.createTextNode(dayOfWeek.value[j + dayShift]));
 #### Fix 3. Do not display empty days
 
 This is divided into two sections. First the header. I was checking if the day is empty with 
+
 ```js
 if (plan.week[j]) {
     // render the day name
 }```
+
 Instead I should check if its length is greater than 0:
+
 ```js
 if (plan.week[j].length) {
     // render the day name
 }```
 
 After we've rendered the header it is not important to know the week day inside the plan. Only the order is important. So, fixing displaying the actual plan involved deleting empty days from array.
+
 ```js
 var cleanPlan = [];
 for (j = 0; j < numberOfDays; j++) {
@@ -274,6 +278,7 @@ And using the ```cleanPlan``` instead of ```plan.week``` when rotating the table
 #### Fix 1. Not all td's rendered
 
 After the table is rotated number of days in hours might be shorter than all days. So when iterating inside the row I decided to use ```cleanPlan.length``` instead of ```daysInHours[j].length```:
+
 ```js
 for (var j = 0; j < daysInHours.length; j++) {
     var tr = document.createElement('tr');
