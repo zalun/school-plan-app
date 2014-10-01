@@ -78,11 +78,11 @@ The app is build in ```school-plan/platforms/android/ant-build/SchoolPlan-debug.
 
 ### Realization
 
-Use <a href="http://mozbrick.github.io/">Brick</a>. Actually only the ```brick-deck``` component.  This will allow to display one ```brick-card``` while hiding the other. Run the following command to install entire Brick into the ```app/bower_components``` directory.
+Use <a href="http://brick.mozilla.io/">Brick</a>. Actually only the ```brick-deck``` component.  This will allow to display one ```brick-card``` while hiding the other. Run the following command to install entire Brick into the ```app/bower_components``` directory.
 
     bower install mozbrick/brick 
 
-The <a href="http://mozbrick.github.io/docs/brick-deck.html">documentation</a>  provides the info how to switch the deck on. It says to add ```src/brick-deck.html```, where in fact ```dist/brick-deck.html``` is needed. Following code needs to be added to the ```<head>``` section in ```index.html``` file:
+The <a href="http://brick.mozilla.io/v2.0/docs/brick-deck">documentation</a>  provides the info how to switch the deck on. It says to add ```src/brick-deck.html```, where in fact ```dist/brick-deck.html``` is needed. Following code needs to be added to the ```<head>``` section in ```index.html``` file:
 
 ```html
 	<script src="app/bower_components/brick/dist/platform/platform.js"></script>
@@ -143,7 +143,7 @@ Brick adds a few functions and attributes to all its elements. In this case ```l
 
 ### Realization
 
-We will use Brick's component <a href="http://mozbrick.github.io/docs/brick-tabbar.html">```brick-tabbar```</a>. 
+We will use Brick's component <a href="http://brick.mozilla.io/v2.0/docs/brick-tabbar">```brick-tabbar```</a>. 
 
 To do so you need to import the ```brick-tabbar``` component. Brick part of the ```<head>``` will look as follows:
 

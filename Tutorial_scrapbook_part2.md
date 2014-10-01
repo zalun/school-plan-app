@@ -121,7 +121,7 @@ createUI: function(plans) {
     // render UI
     }, function() {}, {type: 'narrow', item: 'days'});
 ```
-If you'd like to use full day names, just change ```type: 'narrow'``` to ```type: 'wide'```.
+```dayOfWeek``` will hold an ```Array``` of week day names. In my case ```['Pn', 'Wt', 'Śr', 'Cz', 'Pt']```. If you'd like to use full day names, just change ```type: 'narrow'``` to ```type: 'wide'```.
 
 
 Creating ```table``` and ```thead``` elements. (The empty ```th``` is needed for the numbers):
@@ -158,9 +158,10 @@ for (var j = 0; j < plan.week.length; j++) {
 }
 ```
 
-Now daysInHours array can be easily used to render the plan into HTML table:
+Now ```daysInHours``` array can be easily used to render the plan into HTML table:
 
 ```js
+var tbody = document.createElement('tbody');
 for (var j = 0; j < daysInHours.length; j++) {
     var tr = document.createElement('tr');
     var td = document.createElement('td');
@@ -175,6 +176,7 @@ for (var j = 0; j < daysInHours.length; j++) {
     }
     tbody.appendChild(tr);
 }
+table.appendChild(tbody);
 ```
 
 At the end the table needs to placed inside ```brick-card``` element:
