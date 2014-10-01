@@ -54,7 +54,7 @@ To prepare for data being pulled from another system there is a need to have a w
 
 For now it's OK to distribute the school plan together with the app, It's gonna be much easier to modify it for others as well, as editing data file is simple.
 
-I've placed the data in ```www/data/plans.json``` file. It contains an ```Array``` of plans. Plan is an ```Object``` containing ```title```, ```id``` optional ```active``` field and ```weeek```, an actual plan which is an ```Array``` of ```String```s. 
+I've placed the data in ```www/data/plans.json``` file. It contains an ```Array``` of plans. Plan is an ```Object``` containing ```title```, ```id``` optional ```active``` field and ```weeek```, an actual plan which is an ```Array``` of ```String```s. (*Note: use jshint to check the quality of your code*)
 
 ```js
 [
@@ -220,3 +220,65 @@ The result is almost the same as from Stage4. The only difference being short we
 ![Stage5 Result Screenshot
 ](./images/stage5-result.gif)
 
+### Bug fixing
+
+Short after I've seen the app working I've found few issues: 
+
+1. If the last days are shorter than the first ones ```td``` element is not created and background is not visible. 
+2. The second comes from globalization. I started the week with Monday and I was collecting it's name from weekday array using index 0. It's fine for Polish calendar, but not so good for English one.
+3. Empty day was displayed. This would be bad for students who attend to the school at the weekend
+
+![Stage5 Bug Screenshot
+](./images/stage5-bug.png)
+
+#### Fix 2. Wrong day of the week displayed
+To fix the latter I decided to use ```navigator.globalization.getFirstDayOfWeek``` and on the basis of its result shift the days. I decided to count the days from Monday as it's the most common case at schools.
+
+```js
+navigator.globalization.getDateNames(function(dayOfWeek){
+    navigator.globalization.getFirstDayOfWeek(function(firstDay){
+        var dayShift = (1 - firstDay.value) % 7;
+```
+
+and instead of using the index I shifted it by ```dayShift``` when displaying ```th``` elements:
+
+```js
+th.appendChild(document.createTextNode(dayOfWeek.value[j + dayShift]));
+```
+
+#### Fix 3. Do not display empty days
+
+This is divided into two sections. First the header. I was checking if the day is empty with 
+```js
+if (plan.week[j]) {
+    // render the day name
+}```
+Instead I should check if its length is greater than 0:
+```js
+if (plan.week[j].length) {
+    // render the day name
+}```
+
+After we've rendered the header it is not important to know the week day inside the plan. Only the order is important. So, fixing displaying the actual plan involved deleting empty days from array.
+```js
+var cleanPlan = [];
+for (j = 0; j < numberOfDays; j++) {
+    if (plan.week[j].length > 0) {
+        cleanPlan.push(plan.week[j]);
+    }
+}
+```
+And using the ```cleanPlan``` instead of ```plan.week``` when rotating the table.
+
+
+#### Fix 1. Not all td's rendered
+
+After the table is rotated number of days in hours might be shorter than all days. So when iterating inside the row I decided to use ```cleanPlan.length``` instead of ```daysInHours[j].length```:
+```js
+for (var j = 0; j < daysInHours.length; j++) {
+    var tr = document.createElement('tr');
+    // ...
+    for (var k = 0; k < cleanPlan.length; k++) {
+        var td = document.createElement('td');
+        // ...
+```

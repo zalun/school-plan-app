@@ -1,41 +1,24 @@
 [
     {
-      "title": "Tosia",
-      "id": "tosia",
+      "title": "A",
+      "id": "a",
       "active": 1,
       "week": [
         [
+          "J. niemiecki"
+        ], [
+          "E. wczesn",
           "E. wczesn",
           "E. wczesn",
           "E. wczesn",
           "J. angielski",
-          "E. wczesn",
-          "E. wczesn"
+          "",
+          "",
+          "Robotyka"
         ], [
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "J. angielski"
         ], [
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "Msza Św",
-          "J. angielski"
         ], [
-          "E. wczesn",
-          "E. wczesn",
-          "Religia",
-          "E. wczesn",
-          "J. angielski",
-          "J. angielski"
-        ], [
-          "J. niemiecki",
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "Religia"
+          "J. niemiecki"
         ]
       ]
     }, {
