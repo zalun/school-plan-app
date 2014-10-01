@@ -253,14 +253,16 @@ This is divided into two sections. First the header. I was checking if the day i
 ```js
 if (plan.week[j]) {
     // render the day name
-}```
+}
+```
 
 Instead I should check if its length is greater than 0:
 
 ```js
 if (plan.week[j].length) {
     // render the day name
-}```
+}
+```
 
 After we've rendered the header it is not important to know the week day inside the plan. Only the order is important. So, fixing displaying the actual plan involved deleting empty days from array.
 
