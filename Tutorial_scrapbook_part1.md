@@ -2,9 +2,9 @@
 
 ## Story
 
-I've got two kids and I'm always forgetting their school plan. Certainly I could copy the HTML to JSFiddle and load the plan as firefox app - https://hacks.mozilla.org/2013/08/using-jsfiddle-to-prototype-firefox-os-apps/ Unfortunately this will not load offline and (for now) will not work on iOS.
+I've got two kids and I'm always forgetting their school plan. Certainly I could copy the HTML to JSFiddle and load the plan as firefox app - https://hacks.mozilla.org/2013/08/using-jsfiddle-to-prototype-firefox-os-apps/ Unfortunately this will not load offline and (for now) will not work on iOS. Instead I would like to have an app which could be used by everyone in our family.
 
-## Target
+## We will build
 
 A mobile application which will:
 
@@ -22,11 +22,11 @@ You just need to have some HTML5 knowledge.
 
 ## Preparation
 
-I've decided to use Cordova as it's currently the best free tool which delivers HTML apps to many platforms. Cordova is a NodeJS project. You should have it installed before Stage 1. First <a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">install NodeJS</a>. Then install Cordova globally using ```npm``` package manager. On my systems (Ubuntu or OSX):
+I've decided to use Cordova as it's currently the best free tool which delivers HTML apps to many platforms. Cordova is a NodeJS project. You should have it installed before Stage 1. First <a href="https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager">install NodeJS</a>. Then install Cordova globally using ```npm``` package manager. On my systems (Ubuntu or OSX), you may need to have root access:
 
     npm install -g cordova
 
-You also need to have <a href="https://www.mozilla.org/en-US/firefox/new/">latest Firefox</a> installed.
+You also need to have the <a href="https://www.mozilla.org/en-US/firefox/new/">latest Firefox</a> installed.
 
 Brick is a tool build for app developers. It's a set of ready to use web components. It's created at Mozilla and is extremely easy to use.
 
@@ -48,7 +48,7 @@ Start with plain Cordova project
     
     cordova create school-plan com.example.schoolplan SchoolPlan
 
-```school-plan``` directory with some files has been created. Open ```index.html``` and remove everything from ```<body>``` element.  Copy the desired school plan(s) into separate elemets. I've chosen ```<table>```.  Change styling in ```css/index.css```. There is no JavaScript used in this stage.
+```school-plan``` directory with some files has been created. Open ```www/index.html``` and remove everything from ```<body>``` element.  Copy the desired school plan(s) into separate elemets. I've chosen ```<table>```.  Change styling in ```css/index.css``` if needed. There is no JavaScript used in this stage.
 
 To test the app add a ```firefoxos``` platform and prepare the application. The last step is needed every time you want to check the changes.
 

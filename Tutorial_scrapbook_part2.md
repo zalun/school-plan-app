@@ -6,7 +6,7 @@ This is a continuation of a previous tutorial.
 
 I've got two kids with a different school plans. We're using iOS and Android devices to follow them. Others have seen the benefits and would like to have such apps as well.
 
-## Target
+## What will be build
 
 A mobile application which will:
 
