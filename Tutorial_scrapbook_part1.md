@@ -37,6 +37,7 @@ To install Brick we will need also Bower
 Find the school site and copy the HTML code of the plans to a separate file.
 
 ## Stage 1
+See code on <a href="https://github.com/zalun/school-plan-app/tree/master/stage1">GitHub</a>
 
 ### Goal
 
@@ -71,6 +72,7 @@ The app is build in ```school-plan/platforms/android/ant-build/SchoolPlan-debug.
 ](./images/stage1-result.gif)
 
 ## Stage 2
+See code on <a href="https://github.com/zalun/school-plan-app/tree/master/stage2">GitHub</a>
 
 ### Improvements
 
@@ -137,6 +139,8 @@ Brick adds a few functions and attributes to all its elements. In this case ```l
 
 ## Stage 3
 
+See code on <a href="https://github.com/zalun/school-plan-app/tree/master/stage3">GitHub</a>
+
 ### Improvement
 
 1. Add a menu bar with the name of currently displayed plan
@@ -172,6 +176,8 @@ The app got simplier. No JavaScript is needed you can safely remove it from the 
 ](./images/stage3-result.gif)
 
 ## Stage 4
+
+See code on <a href="https://github.com/zalun/school-plan-app/tree/master/stage4">GitHub</a>
 
 ### Improvement
 

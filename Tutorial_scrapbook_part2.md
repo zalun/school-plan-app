@@ -33,6 +33,8 @@ I assume Cordova and Bower are installed and working
 
 ## Stage 5
 
+See code on <a href="https://github.com/zalun/school-plan-app/tree/master/stage5">GitHub</a>
+
 > I call it a stage 5 because it really is a continuation.
 
 ### Improvements
