@@ -125,28 +125,39 @@ createUI: function(plans) {
 ```
 ```dayOfWeek``` will hold an ```Array``` of week day names. In my case ```['Pn', 'Wt', 'Śr', 'Cz', 'Pt']```. If you'd like to use full day names, just change ```type: 'narrow'``` to ```type: 'wide'```.
 
-
-Creating ```table``` and ```thead``` elements. (The empty ```th``` is needed for the numbers):
+Now there is a need to create individual plans. This time ```brick-tabbar-tab``` and ```brick-card``` elements are created using JavaScript. Tab refers to the right card using its ```target``` parameter. It has the same value as card's ```id```. Brick will parse this value and create a ```tab.targetElement``` which will link to the card element.
 
 ```js
 for (var i = 0; i < plans.length; i++) {
     var plan = plans[i];
+    
+    //create tab
+    var tab = document.createElement('brick-tabbar-tab');
+    tab.setAttribute('target', plan.id);
+    tab.appendChild(document.createTextNode(plan.title));
+    tabbar.appendChild(tab);
+
+    // create card
+    var card = document.createElement('brick-card');
+    card.setAttribute('id', plan.id);
+    deck.appendChild(card); 
+
+    // link card to tab
+    card.tabElement = tab;
+    card.addEventListener('show', function() {
+        this.tabElement.select();
+    });
+     
+    // create plan table
     var table = document.createElement('table');
-    var thead = document.createElement('thead');
-    var th_empty = document.createElement('th');
-    thead.appendChild(th_empty);
-    for (var j = 0; j < plan.week.length; j++) {
-        if (plan.week[j]) {
-            var th = document.createElement('th');
-            th.appendChild(document.createTextNode(dayOfWeek.value[j]));
-            thead.appendChild(th);
-        }
-    }
-    table.appendChild(thead);
+
     // ...
+}
 ```
 
-Now we're reaching to an issue - we're representing the plan per day and then per hour. Unfortunately tables in HTML are created row by row which means the array needs to be rotated
+First we will create actual plan elements and then the header. It is because ```table.insertRow()``` either creates a new ```tbody``` and ```tr``` inside or adds a row to any existing ```HTMLTableSectionElement``` (```thead``` if already created). We could call ```table.tbodys(0)``` but it would complicate the code.
+
+There is a problem to be solved - we're representing the plan in data as we understood them - hours inside days. Unfortunately tables in HTML are created row by row (days inside hours) which means the array needs to be rotated
 
 ```js
 var daysInHours = [];
@@ -160,46 +171,45 @@ for (var j = 0; j < plan.week.length; j++) {
 }
 ```
 
-Now ```daysInHours``` array can be easily used to render the plan into HTML table:
+Now ```daysInHours``` array can be easily used to render the plan into HTML table. There is an important note - ```table.insertRow``` needs to use the optional index, as by default Android inserts the row on top:
 
 ```js
-var tbody = document.createElement('tbody');
 for (var j = 0; j < daysInHours.length; j++) {
-    var tr = document.createElement('tr');
-    var td = document.createElement('td');
-    tr.appendChild(td);
+    var tr = table.insertRow(-1);
+    var td = tr.insertCell();
     td.appendChild(document.createTextNode(j + 1));
     for (var k = 0; k < daysInHours[j].length; k++) {
-        var td = document.createElement('td');
+        var td = tr.insertCell();
         if (daysInHours[j][k]) {
             td.appendChild(document.createTextNode(daysInHours[j][k]));
         }
-        tr.appendChild(td);
     }
-    tbody.appendChild(tr);
 }
-table.appendChild(tbody);
 ```
 
-At the end the table needs to placed inside ```brick-card``` element:
+Table needs a header:
+```js
+var thead = table.createTHead();
+var tr = thead.insertRow();
+var th_empty = document.createElement('th');
+tr.appendChild(th_empty);
+for (var j = 0; j < daysInHours.length; j++) {
+    // add th only if day isn't empty
+    if (plan.week[j]) {
+        var th = document.createElement('th');
+        th.appendChild(document.createTextNode(dayOfWeek.value[j]));
+        tr.appendChild(th);
+    }
+}
+```
+
+Table needs to be placed inside ```brick-card``` element:
 
 ```js
-var card = document.createElement('brick-card');
-card.setAttribute('id', plan.id);
 card.appendChild(table);
-deck.appendChild(card); 
 ```
 
-```brick-tabbar-tab``` has to display the names of the plans:
-
-```js
-var tab = document.createElement('brick-tabbar-tab');
-tab.setAttribute('target', plan.id);
-tab.appendChild(document.createTextNode(plan.title));
-tabbar.appendChild(tab);
-```
-
-The right tab needs to be selected:
+The right tab needs to be selected when the app is loaded:
 
 ```js
 if (plan.active) {
@@ -208,16 +218,7 @@ if (plan.active) {
 }
 ```
 
-And lastly - switching cards needs to link back to the right tabs:
-
-```js
-card.tabElement = tab;
-card.addEventListener('show', function() {
-    this.tabElement.select();
-});
-```
-
-The result is almost the same as from Stage4. The only difference being short weekday names.
+The result is almost the same as in Stage4. The only difference being short weekday names.
 
 ![Stage5 Result Screenshot
 ](./images/stage5-result.gif)
@@ -259,15 +260,15 @@ if (plan.week[j]) {
 }
 ```
 
-Instead I should check if its length is greater than 0:
+Instead I should check if the day's array length is greater than 0:
 
 ```js
-if (plan.week[j].length) {
+if (plan.week[j].length > 0) {
     // render the day name
 }
 ```
 
-After we've rendered the header it is not important to know the week day inside the plan. Only the order is important. So, fixing displaying the actual plan involved deleting empty days from array.
+After we've rendered the header it is not needed to know the week day inside the plan. Only the order is important. So, fixing displaying the actual plan involved deleting empty days from array.
 
 ```js
 var cleanPlan = [];
@@ -286,10 +287,10 @@ After the table is rotated number of days in hours might be shorter than all day
 
 ```js
 for (var j = 0; j < daysInHours.length; j++) {
-    var tr = document.createElement('tr');
+    var tr = table.insertRow(-1);
     // ...
     for (var k = 0; k < cleanPlan.length; k++) {
-        var td = document.createElement('td');
+        var td = tr.insertCell();
         // ...
 ```
 
@@ -298,8 +299,21 @@ for (var j = 0; j < daysInHours.length; j++) {
 Seems like the selection of the ```tabbar``` happens before it's been attached to the ```card```. The right solution would be to check what is the site waiting for. For now I will use a simple hack and call this function after some wait:
 
 ```js
-function selectActiveTab() {
-    activeTab.select();
+if (plan.active) {
+    selectTab(tab);
 }
-window.setTimeout(selectActiveTab, 100);
 ```
+
+where ```selectTab``` is using polling for ```activeTab.targetElement```` to detect if Brick already linked tab with cards:
+
+```js
+function selectTab(activeTab) {
+    function selectActiveTab() {
+        if (!activeTab.targetElement) {
+            return window.setTimeout(selectActiveTab, 100);
+        }
+        deck.showCard(activeTab.targetElement);
+    }
+    selectActiveTab();
+}
+``` 
