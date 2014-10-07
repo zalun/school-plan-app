@@ -131,16 +131,16 @@ Now there is a need to create individual plans. This time ```brick-tabbar-tab```
 for (var i = 0; i < plans.length; i++) {
     var plan = plans[i];
     
+    // create card
+    var card = document.createElement('brick-card');
+    card.setAttribute('id', plan.id);
+    deck.appendChild(card); 
+    
     //create tab
     var tab = document.createElement('brick-tabbar-tab');
     tab.setAttribute('target', plan.id);
     tab.appendChild(document.createTextNode(plan.title));
     tabbar.appendChild(tab);
-
-    // create card
-    var card = document.createElement('brick-card');
-    card.setAttribute('id', plan.id);
-    deck.appendChild(card); 
 
     // link card to tab
     card.tabElement = tab;
@@ -155,9 +155,9 @@ for (var i = 0; i < plans.length; i++) {
 }
 ```
 
-First we will create actual plan elements and then the header. It is because ```table.insertRow()``` either creates a new ```tbody``` and ```tr``` inside or adds a row to any existing ```HTMLTableSectionElement``` (```thead``` if already created). We could call ```table.tbodys(0)``` but it would complicate the code.
+First we will create actual plan elements and then the header. It is because ```table.insertRow()``` either creates a new ```tbody``` and ```tr``` inside or adds a row to any existing ```HTMLTableSectionElement``` (```thead``` if already created). We could call ```table.tBodies(0)``` but it would complicate the code.
 
-There is a problem to be solved - we're representing the plan in data as we understood them - hours inside days. Unfortunately tables in HTML are created row by row (days inside hours) which means the array needs to be rotated
+There is a problem to be solved - we're representing the plan in data as we understood it - hours inside days. Unfortunately tables in HTML are created row by row (days inside hours) which means the array needs to be rotated
 
 ```js
 var daysInHours = [];
@@ -236,7 +236,7 @@ Short after I've seen the app working I've found few issues:
 ](./images/stage5-bug.png)
 
 #### Fix 2. Wrong day of the week displayed
-To fix the latter I decided to use ```navigator.globalization.getFirstDayOfWeek``` and on the basis of its result shift the days. I decided to count the days from Monday as it's the most common case at schools.
+I decided to use ```navigator.globalization.getFirstDayOfWeek``` and on the basis of its result shift the days. I'm counting the days from Monday as it's the most common case at schools.
 
 ```js
 navigator.globalization.getDateNames(function(dayOfWeek){
@@ -294,9 +294,15 @@ for (var j = 0; j < daysInHours.length; j++) {
         // ...
 ```
 
-#### Fix 4. Slide invisible on load
+#### Fix 4. Card is invisible on load
 
-Seems like the selection of the ```tabbar``` happens before it's been attached to the ```card```. The right solution would be to check what is the site waiting for. For now I will use a simple hack and call this function after some wait:
+Seems like the selection of the ```tabbar``` happens before it's been attached to the ```card```. I've changed 
+
+```js
+window.setTimeout(function() {activeTab.select()}, 0);
+```
+
+To
 
 ```js
 if (plan.active) {
@@ -304,7 +310,7 @@ if (plan.active) {
 }
 ```
 
-where ```selectTab``` is using polling for ```activeTab.targetElement```` to detect if Brick already linked tab with cards:
+where ```selectTab``` is using polling for ```activeTab.targetElement``` to detect if Brick already linked tab with cards:
 
 ```js
 function selectTab(activeTab) {

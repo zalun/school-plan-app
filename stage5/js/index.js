@@ -46,16 +46,16 @@ var app = {
         for (var i = 0; i < plans.length; i++) {
             var plan = plans[i];
 
+            // create card
+            var card = document.createElement('brick-card');
+            card.setAttribute('id', plan.id);
+            deck.appendChild(card); 
+
             //create tab
             var tab = document.createElement('brick-tabbar-tab');
             tab.setAttribute('target', plan.id);
             tab.appendChild(document.createTextNode(plan.title));
             tabbar.appendChild(tab);
-
-            // create card
-            var card = document.createElement('brick-card');
-            card.setAttribute('id', plan.id);
-            deck.appendChild(card); 
 
             // create plan table
             var table = document.createElement('table');
