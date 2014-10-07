@@ -31,37 +31,38 @@ var app = {
         // calculate the shift based on first day
         var dayShift = (1 - firstDay.value) % 7;
         
-        // XXX: there is a possibility of race condition, a simple hack is 
-        // to select the tab after a timeout.
+        // there is a possibility of race condition, a simple hack is 
+        // to use polling.
         function selectTab(activeTab) {
             function selectActiveTab() {
-                activeTab.select();
+                if (!activeTab.targetElement) {
+                    return window.setTimeout(selectActiveTab, 100);
+                }
+                deck.showCard(activeTab.targetElement);
             }
-            window.setTimeout(selectActiveTab, 100);
+            selectActiveTab();
         }
 
         for (var i = 0; i < plans.length; i++) {
             var plan = plans[i];
-            var numberOfDays = plan.week.length;
+
+            //create tab
+            var tab = document.createElement('brick-tabbar-tab');
+            tab.setAttribute('target', plan.id);
+            tab.appendChild(document.createTextNode(plan.title));
+            tabbar.appendChild(tab);
+
+            // create card
+            var card = document.createElement('brick-card');
+            card.setAttribute('id', plan.id);
+            deck.appendChild(card); 
+
             // create plan table
             var table = document.createElement('table');
-            // create table header
-            var thead = document.createElement('thead');
-            var th_empty = document.createElement('th');
-            thead.appendChild(th_empty);
-            for (var j = 0; j < numberOfDays; j++) {
-                // add th only if week isn't empty
-                if (plan.week[j].length > 0) {
-                    var th = document.createElement('th');
-                    th.appendChild(document.createTextNode(dayOfWeek.value[j + dayShift]));
-                    thead.appendChild(th);
-                }
-            }
-            table.appendChild(thead);
-            // create table body
-            //
+
             // transpone table (tables are created per hour instead
             // of per day as data is written)
+            var numberOfDays = plan.week.length;
             var daysInHours = [];
             // delete non existing days
 
@@ -79,18 +80,6 @@ var app = {
                     daysInHours[k][j] = cleanPlan[j][k];
                 }
             }
-            var tbody = document.createElement('tbody');
-
-            //create tab
-            var tab = document.createElement('brick-tabbar-tab');
-            tab.setAttribute('target', plan.id);
-            tab.appendChild(document.createTextNode(plan.title));
-            tabbar.appendChild(tab);
-
-            // create card
-            var card = document.createElement('brick-card');
-            card.setAttribute('id', plan.id);
-            deck.appendChild(card); 
 
             // Switching from one tab to another is done automatically
             // We just need to link it backwards - change tab if
@@ -102,22 +91,31 @@ var app = {
 
             // create content of the card
             for (var j = 0; j < daysInHours.length; j++) {
-                var tr = document.createElement('tr');
-                var td = document.createElement('td');
-                tr.appendChild(td);
+                var tr = table.insertRow(-1);
+                var td = tr.insertCell();
                 td.appendChild(document.createTextNode(j + 1));
                 // we use cleanPlan.length here as we want all hours to
                 // be rendered in all days
                 for (var k = 0; k < cleanPlan.length; k++) {
-                    var td = document.createElement('td');
+                    var td = tr.insertCell();
                     if (daysInHours[j][k]) {
                         td.appendChild(document.createTextNode(daysInHours[j][k]));
                     }
-                    tr.appendChild(td);
                 }
-                tbody.appendChild(tr);
             }
-            table.appendChild(tbody);
+            // create table header
+            var thead = table.createTHead();
+            var tr = thead.insertRow();
+            var th_empty = document.createElement('th');
+            tr.appendChild(th_empty);
+            for (var j = 0; j < numberOfDays; j++) {
+                // add th only if week isn't empty
+                if (plan.week[j].length > 0) {
+                    var th = document.createElement('th');
+                    th.appendChild(document.createTextNode(dayOfWeek.value[j + dayShift]));
+                    tr.appendChild(th);
+                }
+            }
             card.appendChild(table);
             
             // select the active tab
