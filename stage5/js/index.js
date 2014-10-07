@@ -30,6 +30,16 @@ var app = {
         var tabbar = document.getElementById('plan-group-menu');
         // calculate the shift based on first day
         var dayShift = (1 - firstDay.value) % 7;
+        
+        // XXX: there is a possibility of race condition, a simple hack is 
+        // to select the tab after a timeout.
+        function selectTab(activeTab) {
+            function selectActiveTab() {
+                activeTab.select();
+            }
+            window.setTimeout(selectActiveTab, 100);
+        }
+
         for (var i = 0; i < plans.length; i++) {
             var plan = plans[i];
             var numberOfDays = plan.week.length;
@@ -70,6 +80,27 @@ var app = {
                 }
             }
             var tbody = document.createElement('tbody');
+
+            //create tab
+            var tab = document.createElement('brick-tabbar-tab');
+            tab.setAttribute('target', plan.id);
+            tab.appendChild(document.createTextNode(plan.title));
+            tabbar.appendChild(tab);
+
+            // create card
+            var card = document.createElement('brick-card');
+            card.setAttribute('id', plan.id);
+            deck.appendChild(card); 
+
+            // Switching from one tab to another is done automatically
+            // We just need to link it backwards - change tab if
+            // card is changed without touching the tabbar elements
+            card.tabElement = tab;
+            card.addEventListener('show', function() {
+                this.tabElement.select();
+            });
+
+            // create content of the card
             for (var j = 0; j < daysInHours.length; j++) {
                 var tr = document.createElement('tr');
                 var td = document.createElement('td');
@@ -87,30 +118,12 @@ var app = {
                 tbody.appendChild(tr);
             }
             table.appendChild(tbody);
-
-            // create card and deck
-            var card = document.createElement('brick-card');
-            card.setAttribute('id', plan.id);
             card.appendChild(table);
-            deck.appendChild(card); 
-            var tab = document.createElement('brick-tabbar-tab');
-            tab.setAttribute('target', plan.id);
-            tab.appendChild(document.createTextNode(plan.title));
-            tabbar.appendChild(tab);
-
+            
             // select the active tab
             if (plan.active) {
-                var activeTab = tab;
-                window.setTimeout(function() {activeTab.select()}, 0);
+                selectTab(tab);
             }
-
-            // Switching from one tab to another is done automatically
-            // We just need to link it backwards - change tab if
-            // card changed without touching the tabbar elements
-            card.tabElement = tab;
-            card.addEventListener('show', function() {
-                this.tabElement.select();
-            });
         }
     },
     onDeviceReady: function() {

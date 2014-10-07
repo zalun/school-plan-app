@@ -229,6 +229,7 @@ Short after I've seen the app working I've found few issues:
 1. If the last days are shorter than the first ones ```td``` element is not created and background is not visible. 
 2. The second comes from globalization. I started the week with Monday and I was collecting it's name from weekday array using index 0. It's fine for Polish calendar, but not so good for English one.
 3. Empty day was displayed. This would be bad for students who attend to the school at the weekend
+4. On Android the first ```card``` is not displayed "on load", one needs to slide the card to make it visible
 
 ![Stage5 Bug Screenshot
 ](./images/stage5-bug.png)
@@ -290,4 +291,15 @@ for (var j = 0; j < daysInHours.length; j++) {
     for (var k = 0; k < cleanPlan.length; k++) {
         var td = document.createElement('td');
         // ...
+```
+
+#### Fix 4. Slide invisible on load
+
+Seems like the selection of the ```tabbar``` happens before it's been attached to the ```card```. The right solution would be to check what is the site waiting for. For now I will use a simple hack and call this function after some wait:
+
+```js
+function selectActiveTab() {
+    activeTab.select();
+}
+window.setTimeout(selectActiveTab, 100);
 ```

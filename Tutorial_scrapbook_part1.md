@@ -200,7 +200,7 @@ Switching ```deck``` ```card``` is done by ```tabbar``` component. To keep ```ta
 	});
 ```
 
-Because of the race condition (```planGroupMenu.tabs``` might not exist when app is initialized) polling is used to wait until the right moment.
+Because of the race condition (```planGroupMenu.tabs``` might not exist when app is initialized) <a href="http://en.wikipedia.org/wiki/Polling_%28computer_science%29">polling</a> is used to wait until the right moment.
 
 ```js
 	function assignTabs() {
@@ -237,6 +237,7 @@ Detecting one finger swipe is pretty easy for Firefox OS. Two callbacks to to li
 
 	app.planGroup.addEventListener('touchstart', function(evt) {
 		var touches = evt.changedTouches;
+		// do not listen if more than one finger touches the screen
 		if (touches.length == 1) {
 			touchStart(touches[0].pageX);
 		}
