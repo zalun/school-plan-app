@@ -13,7 +13,7 @@ A mobile application which will:
 2. Work offline
 3. Work on many platforms
 
-## Prerequisites
+## Prerequisite knowledge
 
 * You should understand the basics of HTML, CSS and JavaScript before getting started.
 * Please also read the [instructions](https://github.com/zalun/school-plan-app/blob/master/README.md) on how to load any stage in this tutorial.
@@ -31,8 +31,10 @@ I've decided to use [Apache Cordova](http://cordova.apache.org/) for this projec
 2. Next, install Cordova globally using the ```npm``` package manager. On my systems (Ubuntu or OSX), you may need to have root access:
 
     <pre>npm install -g cordova</pre>
+    
+###Installing the latest Firefox
 
-3. Install the <a href="https://www.mozilla.org/en-US/firefox/new/">latest version of Firefox</a> (CHRIS - WHY IS THIS SO IMPORTANT?).
+If you haven't updated Firefox for a while, you should [install the latest version](https://www.mozilla.org/en-US/firefox/new/) to make sure you have all the tools you need.
 
 ###Installing Brick
 
@@ -43,11 +45,11 @@ I've decided to use [Apache Cordova](http://cordova.apache.org/) for this projec
     npm install -g bower
 
 
-2. You can install Brick for your current project using ```bower install mozbrick/brick```, but don't don't do this right now — you need to put this inside your project, not just anywhere.
+2. You can install Brick for your current project using ```bower install mozbrick/brick```, but don't do this right now — you need to put this inside your project, not just anywhere.
 
-##Getting the sample HTML
+##Getting sample HTML
 
-Now you should [download the school plan HTML]() (CHRIS - THIS LINK IS CURRENTLY EMPTY, AS I COULDN'T FIND THE SCHOOL PLAN HTML ANYWHERE. WHERE IS IT?) — copy this code to an HTML file and put it in a safe place for now.
+Now you should find some sample HTML to use in the project — copy your own children's online school plans for this purpose, or [use our sample](#) (CHRIS - LINK CURRENTLY BLANK - ADD A SAMPLE) if you don't have any but want to follow along anyway. Save your markup in a safe place for now.
 
 ## Stage 1: Setting up the basic HTML project
 In this part of the tutorial we will set up the basic project, and display the school plans in plain HTML. See the [stage 1 code on Github](https://github.com/zalun/school-plan-app/tree/master/stage1) if you want to see what the code should look like at the end of this section. 
@@ -67,7 +69,10 @@ This will create a ```school-plan``` directory containing some files.
 cordova prepare</pre>
 The last step is needed every time you want to check the changes.
 
-6. Open the <a href="about:app-manager">App Manager</a> in the Firefox browser. (CHRIS - ANY REASON WHY YOU HAVEN'T TOLD THEM TO GET AURORA/NIGHTLY, AND USE WEBIDE?) Press the [Add Packaged App] button and navigate to the prepared firefoxos app directory, which should be available in ```school-plan/platforms/firefoxos/www```.
+6. Open the <a href="about:app-manager">App Manager</a> in the Firefox browser.  Press the [Add Packaged App] button and navigate to the prepared firefoxos app directory, which should be available in ```school-plan/platforms/firefoxos/www```.
+
+Note: If you are running Furefix Aurora or Nightly, you can do these tasks using our new [WebIDE tool](https://developer.mozilla.org/en-US/docs/Tools/WebIDE).
+
 
 7. Press the [Start Simulator] button and you will see the app running in a Firefox OS simulator. You can inspect, debug and profile it using the App Manager — read [Using the App Manager](https://developer.mozilla.org/en/Firefox_OS/Using_the_App_Manager) for more details. ![App Manager buttons
 ](./images/app-manager-1.png)
@@ -76,7 +81,7 @@ The last step is needed every time you want to check the changes.
 8. Now let's export the app as a native Android APK so we can see it working on that platform. Add the platform and get Cordova to build the apk file, with the following two commands:<pre>cordova platform add android
 cordova platform build android</pre>
 
-9. The apk is build in ```school-plan/platforms/android/ant-build/SchoolPlan-debug.apk``` — test this by...(CHRIS - WHAT'S THE BEST WAY TO DO THIS?)
+9. The apk is build in ```school-plan/platforms/android/ant-build/SchoolPlan-debug.apk``` — read the [Cordova Android Platform Guide](http://cordova.apache.org/docs/en/3.6.0/guide_platforms_android_index.md.html#Android%20Platform%20Guide) for more details on how to test this.
 
 
 ![Stage1 Result Screenshot
@@ -167,7 +172,7 @@ In this section of the tutorial, we'll add a menu bar with the name of the curre
       ...
 ```
 
-3. The app got simpler. No JavaScript is needed so you can safely remove it from the ```index.html``` (CHRIS - WHAT JAVASCRIPT EXACTLY? YOU MEAN THE LINK TO INDEX.JS?). Deck's ```nextCard``` method is called by Brick behind the scenes using tab's ```reveal``` event. The cards will change when the tabbar element is touched.
+3. The app got simpler. No JavaScript is needed so you can safely remove the ```<script>``` elements that link to index.js and cordova.js from the ```index.html```  file. The Deck's ```nextCard``` method is called by Brick behind the scenes using tab's ```reveal``` event. The cards will change when the tabbar element is touched.
 
 
 ![Stage2 Result Animation
