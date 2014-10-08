@@ -243,15 +243,15 @@ In this section of the tutorial, we'll add a menu bar with the name of the curre
 
 To further improve the user experience on touch devices, we'll now add functionality to allow you to swipe left/right to navigate betweeen cards. See the [finished stage 4 code](https://github.com/zalun/school-plan-app/tree/master/stage4) on GitHub.
 
-1. Switching cards is done by the ```tabbar``` component. To keep ```tabbar``` in sync with the current ```card``` you need to link them. This is done by listening to the ```show``` event of each ```card```. (CHRIS - WHERE DO WE ADD THIS?)
+1. Switching cards is currently done by the ```tabbar``` component. To keep selected tab in sync with the current ```card``` you need to link them back. This is done by listening to the ```show``` event of each ```card```. For each tab from stored in ```app.planGroupMenu.tabs```:
 
 ```
 	tab.targetElement.addEventListener('show', function() {
-		this.tabElement.select();
+		// select the tab
 	});
 ```
 
-2. Because of the race condition (```planGroupMenu.tabs``` might not exist when the app is initialized) [polling](http://en.wikipedia.org/wiki/Polling_%28computer_science%29) is used to wait until the right moment before trying to switch (CHRIS - AGAIN, SAY WHERE TO ADD THIS):
+2. Because of the race condition (```planGroupMenu.tabs``` might not exist when the app is initialized) [polling](http://en.wikipedia.org/wiki/Polling_%28computer_science%29) is used to wait until the right moment before trying to assign the events:
 
 ```
 	function assignTabs() {
@@ -260,10 +260,33 @@ To further improve the user experience on touch devices, we'll now add functiona
         } 
         // proceed
 ```
-
-3. Detecting one finger swipe is pretty easy in a Firefox OS app. Two callbacks are needed to listen to the ```touchstart``` and ```touchend``` events and calculate the delta on the ```pageX``` parameter. Unfortunately Android and iOS do not fire the ```touchend``` event if the finger has moved. The obvious move would be to listen to the ```touchmove``` event, but that is fired only once as it's intercepted by the ```scroll``` event. The best way forward is to call ```preventDefault()``` in the ```touchmove``` callback. That way ```scroll``` is switched off, and the functionality can work as expected: (CHRIS - AGAIN, WHERE TO ADD THIS STUFF?)
+Entire part of linking tabs to cards looks as follows:
 
 ```
+onDeviceReady: function() {
+    app.planGroupMenu = document.getElementById('plan-group-menu');
+    function assignTabs() {
+        if (!app.planGroupMenu.tabs) {
+            return window.setTimeout(assignTabs, 100);
+        }
+        for (var i=0; i < app.planGroupMenu.tabs.length; i++) {
+            var tab = app.planGroupMenu.tabs[i];
+            tab.targetElement.tabElement = tab;
+            tab.targetElement.addEventListener('show', function() {
+                this.tabElement.select();
+            });
+        }
+    };
+    assignTabs();
+  
+    // continue below ...
+```
+
+3. Detecting one finger swipe is pretty easy in a Firefox OS app. Two callbacks are needed to listen to the ```touchstart``` and ```touchend``` events and calculate the delta on the ```pageX``` parameter. Unfortunately Android and iOS do not fire the ```touchend``` event if the finger has moved. The obvious move would be to listen to the ```touchmove``` event, but that is fired only once as it's intercepted by the ```scroll``` event. The best way forward is to stop the even from bubbling up by calling ```preventDefault()``` in the ```touchmove``` callback. That way ```scroll``` is switched off, and the functionality can work as expected: 
+
+```
+    // ... continuation
+    app.planGroup = document.getElementById('plan-group');
 	var startX = null;
 	var slideThreshold = 100;
 
@@ -288,14 +311,12 @@ To further improve the user experience on touch devices, we'll now add functiona
 
 	app.planGroup.addEventListener('touchstart', function(evt) {
 		var touches = evt.changedTouches;
-		// do not listen if more than one finger touches the screen
 		if (touches.length == 1) {
 			touchStart(touches[0].pageX);
 		}
 	});
 
 	app.planGroup.addEventListener('touchmove', function(evt) {
-	    // stop scroll event intercepting touchmove
 		evt.preventDefault(); 
 		touchEnd(evt.changedTouches[0].pageX);
 	});
@@ -305,3 +326,6 @@ You can add as many plans as you like — just make sure that their titles fit o
 
 ![Stage1 Result Screenshot
 ](./images/stage4-result.gif)
+
+### To be continued ...
+We're preparing the next chapter where this app will evolve into a marketplace app with downloadable plans. Stay tuned!

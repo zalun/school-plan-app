@@ -60,7 +60,7 @@ var app = {
             console.log('1 finger down');
             if (touches.length == 1) {
                 console.log('1 finger down');
-                // only one finger swipe is important for us
+                // runs only for one finger touch
                 touchStart(touches[0].pageX);
             }
         });
