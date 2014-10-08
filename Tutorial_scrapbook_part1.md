@@ -49,7 +49,7 @@ If you haven't updated Firefox for a while, you should [install the latest versi
 
 ##Getting sample HTML
 
-Now you should find some sample HTML to use in the project — copy your own children's online school plans for this purpose, or [use our sample]](#) if you don't have any but want to follow along anyway. Save your markup in a safe place for now.
+Now you should find some sample HTML to use in the project — copy your own children's online school plans for this purpose, or [use our sample](https://raw.githubusercontent.com/zalun/school-plan-app/master/sample.html) if you don't have any but want to follow along anyway. Save your markup in a safe place for now.
 
 ## Stage 1: Setting up the basic HTML project
 In this part of the tutorial we will set up the basic project, and display the school plans in plain HTML. See the [stage 1 code on Github](https://github.com/zalun/school-plan-app/tree/master/stage1) if you want to see what the code should look like at the end of this section. 
@@ -61,9 +61,54 @@ This will create a ```school-plan``` directory containing some files.
 
 2. Inside ```school-plan```, open ```www/index.html``` in your text editor and remove everything from inside the ```<body>``` element.
 
-3. Copy the school plan HTML you saved earlier into separate elements. I've chosen ```<table>```.
+3. Copy the school plan HTML you saved earlier into separate elements. I think the best is to use ```<table>```:
 
-4. Change the styling contained within ```css/index.css``` if you wish, to make the tables look how you want (CHRIS - THESE LAST TWO INSTRUCTIONS ARE A BIT VAGUE - YOU SHOULD PROVIDE EXACT HTML AND CSS LISTINGS FOR THE READER TO USE, SO THEY DON'T NEED TO THINK).
+```
+</head>
+<body>
+  <h1>Angelica</h1>
+  <table>
+    <thead>
+      <tr> 
+        <th></th>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1.</td>
+        <td>Art</td>
+        <td>English</td>
+```
+
+
+4. Change the styling contained within ```www/css/index.css``` if you wish, to make the tables look how you want. I've chosen to use "zebra stripes" design.
+
+```
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+}
+th {
+  font-size: 12px;
+  font-weight: normal;
+  color: #039;
+  padding: 10px 8px;
+}
+td {
+  color: #669;
+  padding: 8px;
+}
+tbody tr:nth-child(odd) {
+  background: #e8edff;
+}
+```
+
 
 5. To test the app quickly and easily, add the ```firefoxos``` platform as a cordova target and prepare the application by entering the following two commands:<pre>cordova platform add firefoxos
 cordova prepare</pre>
@@ -139,10 +184,26 @@ html, body {height: 100%}
     }
 ```
 
-7. Cordova adds few events; one of which — ```deviceready``` — is fired after all Cordova code is loaded and initiated. Let's put the main app action code inside this event's callback - ```app.onDeviceReady```. (CHRIS - SHOW THE EXACT CODE THAT NEEDS TO BE ADDED?)
+7. Cordova adds few events; one of which — ```deviceready``` — is fired after all Cordova code is loaded and initiated. Let's put the main app action code inside this event's callback - ```app.onDeviceReady```.
 
-8. Brick adds a few functions and attributes to all its elements. In this case ```loop``` and ```nextCard``` are added to the ```<brick-deck>``` element. As it includes an ```id="plan-group"``` attribute, the appropriate way to get this element from the DOM is ```document.getElementById```. We want the cards to switch when the ```touchstart``` event is fired; at this point ```nextCard``` will be called from the callback ```app.nextPlan```. (CHRIS - SO DOES ANY CODE NEED TO BE ADDED AT THIS POINT? YOU SEEM TO SAY A LOAD OF THINGS, BUT THEN DON'T GIVE A PARTICULAR INSTRUCTION.)
+```
+    onDeviceReady: function() {
+      // starts when device is ready
+    },
+```
 
+8. Brick adds a few functions and attributes to all its elements. In this case ```loop``` and ```nextCard``` are added to the ```<brick-deck>``` element. As it includes an ```id="plan-group"``` attribute, the appropriate way to get this element from the DOM is ```document.getElementById```. We want the cards to switch when the ```touchstart``` event is fired; at this point ```nextCard``` will be called from the callback ```app.nextPlan```. 
+
+```
+    onDeviceReady: function() {
+        app.planGroup = document.getElementById('plan-group');
+        app.planGroup.loop = true;
+        app.planGroup.addEventListener('touchstart', app.nextPlan);
+    },
+    nextPlan: function() {
+        app.planGroup.nextCard();
+    }
+```
  
 ![Stage2 Result Animation
 ](./images/stage2-result.gif)
@@ -172,7 +233,7 @@ In this section of the tutorial, we'll add a menu bar with the name of the curre
       ...
 ```
 
-3. The app got simpler. No JavaScript is needed so you can safely remove the ```<script>``` elements that link to index.js and cordova.js from the ```index.html```  file. The Deck's ```nextCard``` method is called by Brick behind the scenes using tab's ```reveal``` event. The cards will change when the tabbar element is touched.
+3. The Deck's ```nextCard``` method is called by Brick behind the scenes using tab's ```reveal``` event. The cards will change when the tabbar element is touched. The app got simpler. If you wish to end the tutorial here you can safely remove the ```<script>``` elements that link to index.js and cordova.js from the ```index.html```  file. 
 
 
 ![Stage2 Result Animation
@@ -181,13 +242,6 @@ In this section of the tutorial, we'll add a menu bar with the name of the curre
 ## Stage 4
 
 To further improve the user experience on touch devices, we'll now add functionality to allow you to swipe left/right to navigate betweeen cards. See the [finished stage 4 code](https://github.com/zalun/school-plan-app/tree/master/stage4) on GitHub.
-
-Javascript needs to be used again. (CHRIS - RATHER THAN ASKING THE READER TO ADD THESE IN AGAIN, WE SHOULDN'T ASK THEM TO REMOVE THE SCRIPT ELEMENTS EARLIER - INSTEAD, WE SHOULD ASK THEM TO REMOVE THE CODE INSIDE INDEX.JS THAT THEY DON'T NEED AFTER THE STAGE 3 ADDITIONS, AND THEN HERE WE CAN CUT OUT THIS FIRST STEP)
-
-```
-	<script type="text/javascript" src="cordova.js"></script>
-	<script type="text/javascript" src="js/index.js"></script>
-```
 
 1. Switching cards is done by the ```tabbar``` component. To keep ```tabbar``` in sync with the current ```card``` you need to link them. This is done by listening to the ```show``` event of each ```card```. (CHRIS - WHERE DO WE ADD THIS?)
 
