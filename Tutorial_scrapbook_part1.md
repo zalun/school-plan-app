@@ -49,7 +49,7 @@ If you haven't updated Firefox for a while, you should [install the latest versi
 
 ##Getting sample HTML
 
-Now you should find some sample HTML to use in the project — copy your own children's online school plans for this purpose, or [use our sample](#) (CHRIS - LINK CURRENTLY BLANK - ADD A SAMPLE) if you don't have any but want to follow along anyway. Save your markup in a safe place for now.
+Now you should find some sample HTML to use in the project — copy your own children's online school plans for this purpose, or [use our sample]](#) if you don't have any but want to follow along anyway. Save your markup in a safe place for now.
 
 ## Stage 1: Setting up the basic HTML project
 In this part of the tutorial we will set up the basic project, and display the school plans in plain HTML. See the [stage 1 code on Github](https://github.com/zalun/school-plan-app/tree/master/stage1) if you want to see what the code should look like at the end of this section. 
@@ -71,10 +71,10 @@ The last step is needed every time you want to check the changes.
 
 6. Open the <a href="about:app-manager">App Manager</a> in the Firefox browser.  Press the [Add Packaged App] button and navigate to the prepared firefoxos app directory, which should be available in ```school-plan/platforms/firefoxos/www```.
 
-Note: If you are running Furefix Aurora or Nightly, you can do these tasks using our new [WebIDE tool](https://developer.mozilla.org/en-US/docs/Tools/WebIDE).
+*Note: If you are running Firefox Aurora or Nightly, you can do these tasks using our new [WebIDE tool](https://developer.mozilla.org/en-US/docs/Tools/WebIDE).*
 
 
-7. Press the [Start Simulator] button and you will see the app running in a Firefox OS simulator. You can inspect, debug and profile it using the App Manager — read [Using the App Manager](https://developer.mozilla.org/en/Firefox_OS/Using_the_App_Manager) for more details. ![App Manager buttons
+7. Press the [Start Simulator] button then [Update] and you will see the app running in a Firefox OS simulator. You can inspect, debug and profile it using the App Manager — read [Using the App Manager](https://developer.mozilla.org/en/Firefox_OS/Using_the_App_Manager) for more details. ![App Manager buttons
 ](./images/app-manager-1.png)
 
 

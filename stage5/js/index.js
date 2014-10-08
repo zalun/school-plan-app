@@ -20,16 +20,12 @@ var app = {
     createUI: function(plans) {
         // using day of the week in current language
         navigator.globalization.getDateNames(function(dayOfWeek){
-            navigator.globalization.getFirstDayOfWeek(function(firstDay){
-                app.drawUI(plans, dayOfWeek, firstDay);
-            });
+            app.drawUI(plans, dayOfWeek);
         }, function() {}, {type: 'narrow', item: 'days'});
     },
-    drawUI: function(plans, dayOfWeek, firstDay) {
+    drawUI: function(plans, dayOfWeek) {
         var deck = document.getElementById('plan-group');
         var tabbar = document.getElementById('plan-group-menu');
-        // calculate the shift based on first day
-        var dayShift = (1 - firstDay.value) % 7;
         
         // there is a possibility of race condition, a simple hack is 
         // to use polling.
@@ -92,12 +88,12 @@ var app = {
             // create content of the card
             for (var j = 0; j < daysInHours.length; j++) {
                 var tr = table.insertRow(-1);
-                var td = tr.insertCell();
+                var td = tr.insertCell(-1);
                 td.appendChild(document.createTextNode(j + 1));
                 // we use cleanPlan.length here as we want all hours to
                 // be rendered in all days
                 for (var k = 0; k < cleanPlan.length; k++) {
-                    var td = tr.insertCell();
+                    var td = tr.insertCell(-1);
                     if (daysInHours[j][k]) {
                         td.appendChild(document.createTextNode(daysInHours[j][k]));
                     }
@@ -108,11 +104,17 @@ var app = {
             var tr = thead.insertRow();
             var th_empty = document.createElement('th');
             tr.appendChild(th_empty);
-            for (var j = 0; j < numberOfDays; j++) {
+            var planDayNumber;
+            var weekDayNumber;
+            for (var j = 1; j < numberOfDays + 1; j++) {
                 // add th only if week isn't empty
-                if (plan.week[j].length > 0) {
+                // 0 - Monday, 6 - Sunday
+                var planDayNumber = j - 1;
+                // 0 - Sunday, 6 - Saturday
+                var weekDayNumber = j % 7
+                if (plan.week[planDayNumber].length > 0) {
                     var th = document.createElement('th');
-                    th.appendChild(document.createTextNode(dayOfWeek.value[j + dayShift]));
+                    th.appendChild(document.createTextNode(dayOfWeek.value[weekDayNumber]));
                     tr.appendChild(th);
                 }
             }
@@ -162,8 +164,8 @@ var app = {
 
         app.planGroup.addEventListener('touchstart', function(evt) {
             var touches = evt.changedTouches;
-            if (touches.length == 1) {
-                // only one finger swipe is important for us
+            if (touches.length === 1) {
+                // happens only for one finger touch
                 touchStart(touches[0].pageX);
             }
         });
