@@ -1,0 +1,100 @@
+@import '../../../bower_components/brick-common/styles/mixins'
+@import '../../../bower_components/brick-common/styles/params'
+@import '../../../bower_components/brick-common/styles/themes/default/params'
+
+/**
+ * notice the () around teh attribute. that is because of
+ * :host([attr]) syntax to style the host node.
+ *
+ * example:
+ *  &([horizontal-lt-s/m/l]) { mixin() }
+ *  &([horizontal-gt-xs/s/m]) { mixin() }
+ *  &([horizontal-xs/s/m/l]) { mixin() }
+ *  &([horizontal]) { mixin() }
+ * would be created by:
+ * responsifyHost("& > ", horizontal, mixin)
+ */
+responsifyHost(selector, attr, content) {
+  // attr-lt-[s,m,l]
+  for $range in $s $m $l {
+    {selector}([{attr}-lt-{$range.name}]) {
+      @media (max-width: $range.start) {
+        content();
+      }
+    }
+  }
+  // attr-gt-[xs,s,m]
+  for $range in $xs $s $m {
+    {selector}([{attr}-gt-{$range.name}]) {
+      @media (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr-[xs,s,m,l]
+  for $range in $s $m {
+    {selector}([{attr}-{$range.name}]) {
+      @media (max-width: $range.start) and (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr
+  {selector}([{attr}]) {
+    content();
+  }
+}
+
+:host {
+  border-top: 1px solid $color-iota;
+  background: $color-beta;
+  .selected-indicator {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 3px;
+    background: $highlight-color;
+    transition: all 0.2s ease;
+    transform: translateX(0);
+    z-index: 2; // overlay borders, etc
+  }
+  _vertical() {
+    border-top: none;
+    border-right: 1px solid $color-iota;
+    padding-left: $dim-small;
+    ::content brick-tabbar-tab {
+      border-bottom: 1px solid $color-iota;
+      text-align: left;
+      &:last-of-type {
+        border: none;
+      }
+    }
+    .selected-indicator {
+      top: 0px;
+      left: 0px;
+      width: 3px ;
+      transform: translateX(0);
+    }
+  }
+  responsifyHost("&", vertical, _vertical);
+}
+
+::content brick-tabbar-tab {
+  height: 45px;
+  line-height: 45px;
+  cursor: pointer;
+  position: relative;
+  font-style: italic;
+  color: $color-epsilon;
+  &:active {
+    transition: none;
+    opacity: 0.3;
+  }
+  &[selected] {
+    color: $highlight-color;
+  }
+  &[selected]:active {
+    background: transparent;
+  }
+}
+

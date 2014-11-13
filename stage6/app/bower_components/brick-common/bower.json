@@ -1,0 +1,19 @@
+{
+  "name": "brick-common",
+  "description": "Brick Common files",
+  "version": "0.1.5",
+  "keywords": [
+    "brick",
+    "custom",
+    "elements"
+  ],
+  "main": [
+    "brick-common.html",
+    "styles/mixins.styl",
+    "styles/params.styl",
+    "themes/default/params.styl"
+  ],
+  "dependencies": {
+    "font-awesome": "~4.1.0"
+  }
+}

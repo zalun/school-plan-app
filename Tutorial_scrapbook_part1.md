@@ -1,4 +1,4 @@
-# Creating a mobile app from a simple HTML site
+ # Creating a mobile app from a simple HTML site
 This article is a simple tutorial designed to teach you some fundamental skills for creating cross platform web applications. You will build a sample School Plan app, which will provide a dynamic "app-like" experience across many different platforms and work offline. It will use Apache Cordova and Mozilla's Brick web components.
 
 ## The story behind the app
@@ -225,11 +225,11 @@ In this section of the tutorial, we'll add a menu bar with the name of the curre
 
 ```
 	<brick-tabbar id="plan-group-menu" selected-index="0">
-		<brick-tabbar-tab target="tosia">Tosia</brick-tabbar-tab>
-		<brick-tabbar-tab target="magda">Magda</brick-tabbar-tab>
+		<brick-tabbar-tab target="tosia">Angelica</brick-tabbar-tab>
+		<brick-tabbar-tab target="magda">Andrew</brick-tabbar-tab>
 	</brick-tabbar>
 	<brick-deck id="plan-group" selected-index="0">
-	  <brick-card selected id="tosia">
+	  <brick-card selected id="angelica">
       ...
 ```
 

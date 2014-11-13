@@ -323,3 +323,106 @@ function selectTab(activeTab) {
     selectActiveTab();
 }
 ``` 
+
+## Stage 6
+
+See code on GitHub (<a href="https://github.com/zalun/school-plan-app/tree/master/stage6">app</a> and 
+<a href="https://github.com/zalun/school-plan-app/tree/master/stage6-server">server</a>)
+
+### Improvements
+
+* Download the plans from the server
+
+### Realization
+
+We will just download the plans every time the app is used. This is against our plan to make it work offline. This step may not stay as a final one.
+
+Building a server using NodeJS is fairly simple. ```http``` is the only module needed. We will also use ```fs``` to load the file from disk and ```sys``` to display logs.
+
+Create the server is a separate directory as it is not a part of the app. Now move the plans file from application to the server's directory.
+
+	mv stage5/app_data/plans.json stage6-server/
+
+First we will read the file from disk. Create a new file ```server.js``` with the content:
+
+```
+var fs = require('fs'),
+    sys = require("sys");
+
+fs.readFile(__dirname + "/plans.json", function (err, data) {
+	sys.puts(data);
+});
+```
+
+Now run it:
+
+	node server.js
+
+You should see the content of ```plans.json``` file listed in terminal.
+
+Now we will serve this file using the ```http``` module:
+
+```
+var fs = require('fs'),
+    sys = require("sys"),
+    http = require('http');
+
+http.createServer(function (request, response) {
+  fs.readFile(__dirname + "/plans.json", function (err, data) {
+    response.writeHead(200, {"Content-Type": "application/json"});
+    response.end(data);
+    sys.puts("accessed");
+  });
+}).listen(8080);
+sys.puts("Server Running on http://127.0.0.1:8080");   
+```
+
+First we've created the server using ```http.createServer``` method and ordered it to listen to port ```8080```. On every single request ```plans.json``` file is read and returned as a HTTP response. Then we simply log ```accessed``` to the terminal. 
+
+Again run it using node. Navigate to <a href="http://127.0.0.1:8080">http://127.0.0.1:8080</a> using your browser. Contents of the file will display inside the browser. (I use <a href="http://jsonview.com/">JSON View</a> add-on to make the code look well.) We're able to serve the file from our machine. Now we need to read it in the app.
+
+Let's change the ```request.open``` to read from URL instead of the local file. In ```onDeviceReady``` replace ```app_data/plans.json``` with ```http://127.0.0.1:8080```, so it will look like:
+
+	request.open("get", "http://127.0.0.1:8080", true);
+
+Prepare the cordova file and reload app in WebIDE.
+
+You will receive an error *Cross-Origin Request Blocked: The Same Origin Policy disallows reading the remote resource at http://127.0.0.1:8080/. This can be fixed by moving the resource to the same domain or enabling CORS.*. This is a <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS</a> security preventing from loading a script from different domain.
+
+There are two ways of loading a script from different domain. Whitelisting it in Cordova is one of it. But, as we've got the power over the server we may simply allow cross-site HTTP requests. This is done by setting a header ```Access-Control-Allow-Origin```. It's value is a wildcard of domain name on which is placed the script requesting the content. As our script will be placed on the phone, all domains should have access. the needed headers:
+
+    "Access-Control-Allow-Origin": "*", 
+    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+
+We will add these headers to the existing ```Content-Type``` one:
+
+    response.writeHead(200, {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*", 
+      "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"});
+
+Now cancel ```[Control-C]``` and run the server again. Application should now be able to read from the server as from the file before.
+
+
+## Stage 6
+
+### Improvements
+
+* Serve one plan at a time
+* Dynamically add apps to the app
+
+
+## Stage 7
+
+### Improvements
+
+* Store loaded plans in phone memory
+* Reload plan on user's action
+
+
+## Stage 8
+
+### Improvements
+
+* Settings page
+* Delete plan from the phone
