@@ -2,11 +2,3 @@ Improvements
 * Use JSON data
 
 Realization:
-use recroom
-npm install recroom
-recroom create school-plan --cordova
-[... wait ...]
-cd school-plan-2
-
-cordova plugin add org.apache.cordova.file
-

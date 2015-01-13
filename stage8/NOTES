@@ -1,0 +1,14 @@
+Improvements
+* store the plans in app
+* reload all at will
+
+Realization:
+using localStorage to store keys and plans
+add a "reload plans" icon
+
+Refactoring:
+* getDateNames is called for each plan reloaded. As this doesn't change it should 
+  be loaded only ones
+* if id changed - plan is added again 
+  id isn't needed it should be a hashtag
+  

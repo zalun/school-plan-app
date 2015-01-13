@@ -404,15 +404,15 @@ We will add these headers to the existing ```Content-Type``` one:
 Now cancel ```[Control-C]``` and run the server again. Application should now be able to read from the server as from the file before.
 
 
-## Stage 6
+## Stage 7
 
 ### Improvements
 
 * Serve one plan at a time
-* Dynamically add apps to the app
+* Automatically add plans to the app
 
 
-## Stage 7
+## Stage 8
 
 ### Improvements
 
@@ -420,7 +420,7 @@ Now cancel ```[Control-C]``` and run the server again. Application should now be
 * Reload plan on user's action
 
 
-## Stage 8
+## Stage 9
 
 ### Improvements
 

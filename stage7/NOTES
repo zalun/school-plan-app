@@ -1,0 +1,39 @@
+Improvements
+* Reads data from a server
+
+Realization:
+
+Modified .json and changed array to object
+
+server is providing one plan at a time depending on the hashtag provided in URL
+
+    var hashtag = url.parse(request.url).pathname.substr(1);
+    response.end(JSON.stringify(data[hashtag]));
+
+client is reading all hardcoded hashtags:
+
+        var hashtags = ['edhsdcdbc', 'dksdjhksdjh'];
+        for (var i=0; i < hashtags.length; i++) {
+            // get each plan at a time
+            // WARNING: order of the plans is a subject of race condition
+            var request = new XMLHttpRequest();
+            request.onload = app.renderData;
+            request.onerror = function(error) {
+                console.log('DEBUG: Failed to get ``' 
+                            + plansURL + '/' + hashtags[i] 
+                            + '`` file', error);
+            };
+            request.open("get", plansURL + '/' + hashtags[i], true);
+            request.send();
+        }
+
+render is adding one plan at a time
+
+This solution involves hardcoding hashtags which isn't that great.
+Let's create a command for the server to provide available keys.
+
+create commands
+/keys
+/plan/{hashtag}
+
+
