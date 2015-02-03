@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <title>brick-flipbox</title>
+
+    <!-- Importing Polyfill -->
+    <script src="bower_components/platform/platform.js"></script>
+
+    <!-- Importing Custom Elemenent -->
+    <link rel="import" href="dist/brick-flipbox.local.html">
+
+
+    <!-- Demo styles -->
+    <style>
+      .demo {
+        border: 1px solid black;
+        width: 320px;
+        height: 480px;
+      }
+      .demo > div:first-child {
+        background: red;
+      }
+      .demo > div:last-child {
+        background: blue;
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <brick-flipbox class="demo">
+      <div>front</div>
+      <div>back</div>
+    </brick-flipbox>
+    <select name="direction" id="direction">
+      <option value="right" selected="selected">Right</option>
+      <option value="left">Left</option>
+      <option value="up">Up</option>
+      <option value="down">Down</option>
+    </select>
+    <button id="toggleButton">Toggle</button>
+
+    <script>
+    window.addEventListener('WebComponentsReady',function(){
+      var toggleButton = document.getElementById('toggleButton');
+      var direction = document.getElementById('direction');
+      var flipbox = document.querySelector('brick-flipbox');
+      toggleButton.addEventListener('click', function() {
+        flipbox.toggle();
+      });
+      direction.addEventListener('change', function(e) {
+        flipbox.direction = e.currentTarget.value;
+      });
+    });
+    </script>
+
+  </body>
+</html>

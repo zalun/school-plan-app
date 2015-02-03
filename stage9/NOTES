@@ -1,0 +1,14 @@
+Improvements
+* settings
+
+Realization:
+Use brick-flipbox
+  
+
+Copy the styles 
+from https://developer.mozilla.org/en-US/Apps/Design/Firefox_OS_building_blocks/Input_area/2.0
+Consider using web components in the future
+
+
+https://github.com/gaia-components/gaia-icons/tree/master/images
+

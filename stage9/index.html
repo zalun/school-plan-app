@@ -25,19 +25,41 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
         <script src="app/bower_components/brick/dist/platform/platform.js"></script>
         <link rel="stylesheet" type="text/css" href="css/index.css" />
+        <link rel="stylesheet" type="text/css" href="css/input_areas.css" />
+        <link rel="stylesheet" type="text/css" href="css/buttons.css" />
         <link rel="import" href="app/bower_components/brick-deck/dist/brick-deck.html">
         <link rel="import" href="app/bower_components/brick-tabbar/dist/brick-tabbar.html">
+        <link rel="import" href="app/bower_components/brick-flipbox/dist/brick-flipbox.html">
         <meta name="msapplication-tap-highlight" content="no" />
         <title>School Plan - Stage 6</title>
     </head>
     <body>
-        <div id="reload-button"></div>
-        <div id="topbar">
-            <brick-tabbar id="plan-group-menu">
-            </brick-tabbar>
-        </div>
-        <brick-deck id="plan-group">
-        </brick-deck>
+        <brick-flipbox>
+            <section>
+                <div id="settings-button"></div>
+                <div id="topbar">
+                    <brick-tabbar id="plan-group-menu">
+                    </brick-tabbar>
+                </div>
+                <brick-deck id="plan-group">
+                </brick-deck>
+            </section>
+            <section>
+                <div id="settings-off-button"></div>
+                <h2>Settings</h2>
+                <form id="settings">
+                    <p><label for="server-input">Server</label></p>
+                    <p><input type="text" id="server-input" placeholder="http://example.com/"/></p>
+                    <p><label for="input-plan-1" id="label-plan-1">Plan 1</label></p>
+                    <p><input type="text" id="input-plan-1" placeholder="dmcvnlckijclk"/></p>
+                    <p><label for="input-plan-2" id="label-plan-2">Plan 2</label></p>
+                    <p><input type="text" id="input-plan-2" placeholder="dlifujhdlfkjx"/></p>
+                    <p><label for="input-plan-3" id="label-plan-3">Plan 3</label></p>
+                    <p><input type="text" id="input-plan-3" placeholder="fknvmsnxlkdsj"/></p>
+                    <p><button id="reload-button">RELOAD ALL</button></p>
+                </form>
+            </section>
+        </brick-flipbox>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>

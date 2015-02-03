@@ -46,9 +46,20 @@ var app = {
             //create tab
             tab = document.createElement('brick-tabbar-tab');
             tab.setAttribute('target', hashtag);
+            tab.setAttribute('id', 'tab-' + hashtag);
             tab.appendChild(document.createTextNode(plan.title));
             tabbar.appendChild(tab);
+            // Switching from one tab to another is done automatically
+            // We just need to link it backwards - change tab if
+            // card is changed without touching the tabbar elements
+            card.tabElement = tab;
+            card.addEventListener('show', function() {
+                this.tabElement.select();
+            });
         } else {
+            tab = document.getElementById('tab-' + hashtag);
+            // change the tab name
+            tab.firstChild.nodeValue = plan.title;
             // delete table
             var children = card.children;
             for (var i = 0; i < children.length; i++) {
@@ -61,7 +72,7 @@ var app = {
         // create plan table
         var table = document.createElement('table');
 
-        // transpone table (tables are created per hour instead
+        // transpone array (tables are created per hour instead
         // of per day as data is written)
         var numberOfDays = plan.week.length;
         var daysInHours = [];
@@ -83,15 +94,6 @@ var app = {
             }
         }
 
-        // Switching from one tab to another is done automatically
-        // We just need to link it backwards - change tab if
-        // card is changed without touching the tabbar elements
-        if (!reloading) {
-          card.tabElement = tab;
-          card.addEventListener('show', function() {
-              this.tabElement.select();
-          });
-        }
 
         // create content of the card
         for (j = 0; j < daysInHours.length; j++) {
@@ -151,7 +153,6 @@ var app = {
             // store plan in localStorage
             localStorage.setItem(hashtag, this.responseText);
             console.log('creating UI from plan loaded via http'); 
-            console.log('loadPlan', dayOfWeek);
             app.drawUI(plan, hashtag);
         };
         request.onerror = function(error) {
@@ -172,6 +173,11 @@ var app = {
             mozSystem: true});
         request.onload = function() {
             var hashtags = JSON.parse(this.responseText);
+            // remove all existing plans from the phone memory
+            var oldHashtags = localStorage.getItem('hashtags');
+            for (var i=0; i < oldHashtags.length; i++) {
+                localStorage.removeItem(oldHashtags[i]);
+            }
             localStorage.setItem('hashtags', this.responseText);
             for (var i=0; i < hashtags.length; i++) {
                 // get each plan at a time
@@ -212,7 +218,7 @@ var app = {
         }, function() {}, {type: 'narrow', item: 'days'});
 
         var reloadButton = document.getElementById('reload-button');
-        reloadButton.addEventListener('click', app.reloadPlans, false);
+        reloadButton.addEventListener('touchstart', app.reloadPlans, false);
 
         // Implementing one finger swipe to change deck card
         app.planGroup = document.getElementById('plan-group');
