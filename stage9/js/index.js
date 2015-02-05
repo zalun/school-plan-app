@@ -1,9 +1,22 @@
 var flipbox = document.querySelector('brick-flipbox');
 var plansURL;
 var dayOfWeek;
-var hashtags;
+var hashtags = [];
 var oldHashtags = [];
 var selectedPlan;
+
+function isConfigured() {
+    var isConfigured = false;
+    if (plansURL && hashtags && hashtags.length > 0) {
+        for (i = 0; i < hashtags.length; i++) {
+            if (hashtags[i]) {
+                isConfigured = true;
+            }
+        }
+    }
+
+    return isConfigured;
+}
 
 var app = {
     plans: [],
@@ -154,6 +167,9 @@ var app = {
      * on success draw the UI
      */
     loadPlan: function(hashtag) {
+        if (!hashtag) {
+            return;
+        }
         var request = new XMLHttpRequest({
             mozAnon: true,
             mozSystem: true});
@@ -194,6 +210,9 @@ var app = {
      * get list of the plans for given URL (stored in plansURL)
      */
     reloadPlans: function() {
+        if (!isConfigured()) {
+            return;
+        }
         var i;
         for (i = 0; i < oldHashtags.length; i++) {
             localStorage.removeItem(oldHashtags[i]);
@@ -207,6 +226,7 @@ var app = {
         }
         flipbox.toggle();
     },
+
 
     onDeviceReady: function() {
         // SETTINGS
@@ -237,6 +257,7 @@ var app = {
 
         // read hashtags from localStorage
         hashtags = localStorage.getItem('hashtags');
+        if (!hashtags) hashtags = '[]' ;
         var hashtagInput;
         if (hashtags) {
             hashtags = JSON.parse(hashtags);
@@ -244,29 +265,36 @@ var app = {
             for (i = 0; i < hashtags.length; i++) {
                 oldHashtags[i] = hashtags[i];
                 hashtagInput = document.getElementById('input-plan-' + (i + 1));
-                hashtagInput.value = hashtags[i];
-                hashtagInput.hashtagIndex = i;
+                if (hashtags[i]) {
+                    hashtagInput.value = hashtags[i];
+                }
             }
         } 
         // setting hashtags from input
         function setHashtags(evt) {
-            hashtags[evt.target.hashtagIndex] = evt.target.value;
+            if (evt.target.value) {
+                hashtags[evt.target.hashtagIndex] = evt.target.value;
+            } else {
+                hashtags[evt.target.hashtagIndex] = null;
+            }
+
             localStorage.setItem('hashtags', JSON.stringify(hashtags));
         }
-        // XXX currently hardwritten maximum number of plans == 3
+        // XXX hardcoded maximum number of plans == 3
         for (i = 1; i < 4; i++) {
             hashtagInput = document.getElementById('input-plan-' + i);
             hashtagInput.addEventListener('blur', setHashtags);
+            hashtagInput.hashtagIndex = i - 1;
         }
         // flip to settings if not configured yet
-        if (!plansURL || !hashtags) {
+        if (!isConfigured()) {
             flipbox.toggle();
         }
 
         // load plans from storage or server
         navigator.globalization.getDateNames(function(dayOfWeekResponded){
             dayOfWeek = dayOfWeekResponded;
-            if (plansURL && hashtags) {
+            if (isConfigured()) {
                 // load plans from storage
                 for (var i=0; i < hashtags.length; i++) {
                     var planString = localStorage.getItem(hashtags[i]);
