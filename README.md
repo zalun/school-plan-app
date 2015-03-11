@@ -24,7 +24,7 @@ Clone the repository
 Create a cordova app
 
     cd school-plan-app
-	cordova create school-plan com.mozilla-cordova.schoolplan SchoolPlan 
+	cordova create school-plan com.mozillacordova.schoolplan SchoolPlan 
 
 Remove the ``www`` directory and replace it with ``stage[X]``
 
