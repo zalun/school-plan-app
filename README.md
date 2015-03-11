@@ -38,5 +38,7 @@ Add a platform
 
 Application will be exported into ```school-plan/platforms/[platform_name]/www/```
 
+Since app is using Brick please test it on an emulator or machine. It will work in the browser only if served from a server.
+
 One can find more information about working with cordova project at 
 http://cordova.apache.org/docs/en/edge/index.html
