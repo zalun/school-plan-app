@@ -1,88 +1,88 @@
 {
-    "edhsdcdbc": {
-      "title": "Tosia",
-      "active": 1,
-      "week": [
-        [
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "J. angielski",
-          "E. wczesn",
-          "E. wczesn",
-          "",
-          "Basen"
-        ], [
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "J. angielski"
-        ], [
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "Msza Św",
-          "J. angielski"
-        ], [
-          "E. wczesn",
-          "E. wczesn",
-          "Religia",
-          "E. wczesn",
-          "J. angielski",
-          "J. angielski"
-        ], [
-          "J. niemiecki",
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "Religia"
-        ]
+  "edhsdcdbc": {
+    "title": "Tosia",
+    "active": 1,
+    "week": [
+      [
+        "E. wczesn",
+        "E. wczesn",
+        "E. wczesn",
+        "J. angielski",
+        "E. wczesn",
+        "E. wczesn",
+        "",
+        "Basen"
+      ], [
+        "E. wczesn",
+        "E. wczesn",
+        "E. wczesn",
+        "E. wczesn",
+        "J. angielski"
+      ], [
+        "E. wczesn",
+        "E. wczesn",
+        "E. wczesn",
+        "Msza Św",
+        "J. angielski"
+      ], [
+        "E. wczesn",
+        "E. wczesn",
+        "Religia",
+        "E. wczesn",
+        "J. angielski",
+        "J. angielski"
+      ], [
+        "J. niemiecki",
+        "E. wczesn",
+        "E. wczesn",
+        "E. wczesn",
+        "Religia"
       ]
-    }, 
-    "dksdjhksdjh": {
-      "title": "Magda",
-      "week": [
-        [
-          "Fizyka",
-          "J. polski",
-          "J. angielski",
-          "Geografia",
-          "Matematyka",
-          "Chemia"
-        ], [
-          "J. polski",
-          "J. polski",
-          "Religia",
-          "J. niemiecki",
-          "Matematyka",
-          "Historia",
-          "J. angielski"
-        ], [
-          "Msza Św",
-          "J. polski",
-          "Wos",
-          "Matematyka",
-          "Matematyka",
-          "Chemia",
-          "Biologia",
-          "Geografia"
-        ], [
-          "Matematyka",
-          "J. angielski",
-          "Historia",
-          "J. polski",
-          "J. niemiecki",
-          "Godz. wych."
-        ], [
-          "Fizyka",
-          "Religia",
-          "J. angielski",
-          "Biologia",
-          "J. polski",
-          "W-F",
-          "W-F"
-        ]
+    ]
+  }, 
+  "dksdjhksdjh": {
+    "title": "Magda",
+    "week": [
+      [
+        "Fizyka",
+        "J. polski",
+        "J. angielski",
+        "Geografia",
+        "Matematyka",
+        "Chemia"
+      ], [
+        "J. polski",
+        "J. polski",
+        "Religia",
+        "J. niemiecki",
+        "Matematyka",
+        "Historia",
+        "J. angielski"
+      ], [
+        "Msza Św",
+        "J. polski",
+        "Wos",
+        "Matematyka",
+        "Matematyka",
+        "Chemia",
+        "Biologia",
+        "Geografia"
+      ], [
+        "Matematyka",
+        "J. angielski",
+        "Historia",
+        "J. polski",
+        "J. niemiecki",
+        "Godz. wych."
+      ], [
+        "Fizyka",
+        "Religia",
+        "J. angielski",
+        "Biologia",
+        "J. polski",
+        "W-F",
+        "W-F"
       ]
-    }
+    ]
+  }
 }

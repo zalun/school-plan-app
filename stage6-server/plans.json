@@ -1,70 +1,78 @@
 [
-    {
-      "title": "A",
-      "id": "a",
-      "active": 1,
-      "week": [
-        [
-          "J. niemiecki"
-        ], [
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "E. wczesn",
-          "J. angielski",
-          "",
-          "",
-          "Robotyka"
-        ], [
-        ], [
-        ], [
-          "J. niemiecki"
-        ]
+  {
+    "title": "Angelica",
+    "id": "angelica",
+    "active": 1,
+    "week": [
+      [
+        "Art",
+        "Art",
+        "English",
+        "English",
+        "History",
+        "Geography"
+      ], [
+        "English",
+        "Graphics",
+        "History",
+        "Maths"
+      ], [
+        "Music",
+        "Physical Edu",
+        "Physical Edu",
+        "Science",
+        "Spanish",
+        "Maths"
+      ], [
+        "Biology",
+        "Physics",
+        "Religious Edu",
+        "Drama"
+      ], [
+        "Biology",
+        "Geography",
+        "History",
+        "Science"
       ]
-    }, {
-      "title": "Magda",
-      "id": "magda",
-      "week": [
-        [
-          "Fizyka",
-          "J. polski",
-          "J. angielski",
-          "Geografia",
-          "Matematyka",
-          "Chemia"
-        ], [
-          "J. polski",
-          "J. polski",
-          "Religia",
-          "J. niemiecki",
-          "Matematyka",
-          "Historia",
-          "J. angielski"
-        ], [
-          "Msza Św",
-          "J. polski",
-          "Wos",
-          "Matematyka",
-          "Matematyka",
-          "Chemia",
-          "Biologia",
-          "Geografia"
-        ], [
-          "Matematyka",
-          "J. angielski",
-          "Historia",
-          "J. polski",
-          "J. niemiecki",
-          "Godz. wych."
-        ], [
-          "Fizyka",
-          "Religia",
-          "J. angielski",
-          "Biologia",
-          "J. polski",
-          "W-F",
-          "W-F"
-        ]
+    ]
+  }, {
+    "title": "Andrew",
+    "id": "andrew",
+    "week": [
+      [
+        "English",
+        "Maths",
+        "Maths",
+        "English",
+        "Geography",
+        "Physics"
+      ], [
+        "English",
+        "English",
+        "English",
+        "Geography",
+        "French",
+        "Religious Edu"
+      ], [
+        "French",
+        "Maths",
+        "Art",
+        "Art",
+        "History"
+      ], [
+        "Geography",
+        "German",
+        "German",
+        "Maths",
+        "Maths",
+        "Biology"
+      ], [
+        "Business",
+        "Business",
+        "Maths",
+        "Maths",
+        "English"
       ]
-    }
-  ]
+    ]
+  }
+]
