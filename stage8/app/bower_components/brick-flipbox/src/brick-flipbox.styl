@@ -1,0 +1,119 @@
+@import '../bower_components/brick-common/styles/mixins'
+@import '../bower_components/brick-common/styles/params'
+
+$frontFace = " ::content > *:first-child";
+$backFace = " ::content > *:last-child";
+$perspective = perspective(800px)
+
+// use this for any transforms of the original front face to preserve z-index
+frontFaceTransform($transform){
+  // apply perspective in the transform itself to account for IE10 not respecting preserve-3d
+  transform: $perspective $transform translate3d(0px,0px,2px);
+}
+
+// use this for any transforms of the original back face to preserve z-index
+backFaceTransform($transform){
+  transform: $perspective $transform translate3d(0px,0px,1px);
+}
+
+:host {
+  box-sizing: border-box;
+  display: block;
+  position: relative;
+  transform-style: preserve-3d;
+
+  & ::content > * {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    backface-visibility: hidden;
+    transition: transform 0.25s linear;
+
+    /* DO NOT ERASE THESE TRANSFORM-STYLES; they fix a flickering issue in FFOS*/
+    transform-style: preserve-3d;
+  }
+
+  // default styles
+  &{$frontFace} {
+    frontFaceTransform(rotateY(0deg));
+    z-index: 2; // z-indeces are neccessary for IE9
+  }
+
+  &{$backFace} {
+    backFaceTransform(rotateY(180deg));
+    z-index: 1;
+  }
+
+  &([_anim-direction="up"]), &([_anim-direction="down"]) {
+    &{$frontFace} {
+      frontFaceTransform(rotateX(0deg));
+    }
+  }
+
+  &([_anim-direction="up"]){$backFace} {
+    backFaceTransform(rotateX(-180deg));
+  }
+
+  &([_anim-direction="down"]){$backFace} {
+    backFaceTransform(rotateX(180deg));
+  }
+
+  // flip right
+  &([flipped]) {
+    /* Note: adding a dummy style to flipped flipboxes forces Android 4+'s
+     * native browser to rerender the flipbox, fixing an issue where the flipping
+     * animation wouldn't play normally */
+    &:after{
+      /* DO NOT ERASE THIS :after SELECTOR */
+      content: "";
+      display: none;
+    }
+
+    &{$frontFace}{
+      frontFaceTransform(rotateY(180deg));
+      z-index: 1; // z-indeces are neccessary for IE9
+    }
+
+    &{$backFace} {
+      backFaceTransform(rotateY(360deg));
+      z-index: 2;
+    }
+  }
+
+  // flip left
+  &([_anim-direction="left"][flipped]){
+    &{$frontFace}{
+      frontFaceTransform(rotateY(-180deg));
+    }
+
+    &{$backFace} {
+      backFaceTransform(rotateY(0deg));
+    }
+  }
+
+  // flip up
+  &([_anim-direction="up"][flipped]){
+    &{$frontFace}{
+      frontFaceTransform(rotateX(180deg));
+    }
+
+    &{$backFace} {
+      backFaceTransform(rotateX(0deg));
+    }
+  }
+
+  // flip down
+  &([_anim-direction="down"][flipped]){
+    &{$frontFace}{
+      frontFaceTransform(rotateX(-180deg));
+    }
+
+    &{$backFace} {
+      backFaceTransform(rotateX(0deg));
+    }
+  }
+}
