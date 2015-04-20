@@ -1,73 +1,16 @@
-var app = {
-    plans: [],
-    planGroup: null,
-    flipbox: null,
-    hashtags: null,
-    plansURL: null,
+var view = {
+    deck: null,
+    tabbar: null,
+    initiated: false,
     dayOfWeek: null,
-    oldHashtags: [],
 
-
-    // Application Constructor
-    initialize: function() {
-        this.bindEvents();
+    setup: function() {
+        view.deck = document.getElementById('plan-group');
+        view.tabbar = document.getElementById('plan-group-menu');
+        view.initiated = true;
     },
 
-    bindEvents: function() {
-        document.addEventListener('deviceready', this.onDeviceReady, false);
-    },
-
-    /*
-     * drawUI:
-     * create a card, tabbar and table for a plan
-     */
-    drawUI: function(plan, hashtag) {
-        var deck = document.getElementById('plan-group');
-        var tabbar = document.getElementById('plan-group-menu');
-        var tab;
-        var i, j;
-        
-        // there is a possibility of race condition (Brick not fully loaded), 
-        // a simple hack is to use polling.
-        function selectTab(activeTab) {
-            function selectActiveTab() {
-                if (!activeTab.targetElement) {
-                    return window.setTimeout(selectActiveTab, 100);
-                }
-                deck.showCard(activeTab.targetElement);
-            }
-            selectActiveTab();
-        }
-        
-        // search for errors
-        if (!plan || plan.error || !plan.week) {
-            return;
-        }
-
-        // create card
-        card = document.createElement('brick-card');
-        card.setAttribute('id', hashtag);
-        deck.appendChild(card); 
-
-        //create tab
-        tab = document.createElement('brick-tabbar-tab');
-        tab.setAttribute('target', hashtag);
-        tab.setAttribute('id', 'tab-' + hashtag);
-        // store selectedTab - it is used to provide selecting the last
-        // loaded tab by default (if none of plans has ``active`` parameter
-        tab.addEventListener('select', function(event) {
-            app.selectedTab = event.target;
-        });
-        tab.appendChild(document.createTextNode(plan.title));
-        tabbar.appendChild(tab);
-        // Switching from one tab to another is done automatically
-        // We just need to link it backwards - change tab if
-        // card is changed without touching the tabbar elements
-        card.tabElement = tab;
-        card.addEventListener('show', function() {
-            this.tabElement.select();
-        });
-
+    createTable: function(plan) {
         // create plan table
         var table = document.createElement('table');
 
@@ -91,7 +34,24 @@ var app = {
             }
         }
 
-
+        // create table header
+        var thead = table.createTHead();
+        tr = thead.insertRow();
+        var th_empty = document.createElement('th');
+        tr.appendChild(th_empty);
+        var planDayNumber, weekDayNumber;
+        for (i = 1; i < numberOfDays + 1; i++) {
+            // add th only if week isn't empty
+            // 0 - Monday, 6 - Sunday
+            planDayNumber = i - 1;
+            // 0 - Sunday, 6 - Saturday
+            weekDayNumber = i % 7;
+            if (plan.week[planDayNumber].length > 0) {
+                th = document.createElement('th');
+                th.appendChild(document.createTextNode(view.dayOfWeek.value[weekDayNumber]));
+                tr.appendChild(th);
+            }
+        }
         // create content of the card
         var th, tr, td;
         for (i = 0; i < daysInHours.length; i++) {
@@ -107,25 +67,62 @@ var app = {
                 }
             }
         }
-        // create table header
-        var thead = table.createTHead();
-        tr = thead.insertRow();
-        var th_empty = document.createElement('th');
-        tr.appendChild(th_empty);
-        var planDayNumber, weekDayNumber;
-        for (i = 1; i < numberOfDays + 1; i++) {
-            // add th only if week isn't empty
-            // 0 - Monday, 6 - Sunday
-            planDayNumber = i - 1;
-            // 0 - Sunday, 6 - Saturday
-            weekDayNumber = i % 7;
-            if (plan.week[planDayNumber].length > 0) {
-                th = document.createElement('th');
-                th.appendChild(document.createTextNode(app.dayOfWeek.value[weekDayNumber]));
-                tr.appendChild(th);
-            }
+        return table;
+    },
+
+    /*
+     * createPlan:
+     * create a card, tabbar and table for a plan
+     */
+    createPlan: function(plan, hashtag) {
+        var tab;
+        var i, j;
+        
+        if (!view.initiated) {
+            view.setup();
         }
-        card.appendChild(table);
+        // there is a possibility of race condition (Brick not fully loaded), 
+        // a simple hack is to use polling.
+        function selectTab(activeTab) {
+            function selectActiveTab() {
+                if (!activeTab.targetElement) {
+                    return window.setTimeout(selectActiveTab, 100);
+                }
+                view.deck.showCard(activeTab.targetElement);
+            }
+            selectActiveTab();
+        }
+        
+        // search for errors
+        if (!plan || plan.error || !plan.week) {
+            return;
+        }
+
+        // create card
+        card = document.createElement('brick-card');
+        card.setAttribute('id', hashtag);
+        view.deck.appendChild(card); 
+
+        //create tab
+        tab = document.createElement('brick-tabbar-tab');
+        tab.setAttribute('target', hashtag);
+        tab.setAttribute('id', 'tab-' + hashtag);
+        // store selectedTab - it is used to provide selecting the last
+        // loaded tab by default (if none of plans has ``active`` parameter
+        tab.addEventListener('select', function(event) {
+            app.selectedTab = event.target;
+        });
+        tab.appendChild(document.createTextNode(plan.title));
+        view.tabbar.appendChild(tab);
+        // Switching from one tab to another is done automatically
+        // We just need to link it backwards - change tab if
+        // card is changed without touching the tabbar elements
+        card.tabElement = tab;
+        card.addEventListener('show', function() {
+            this.tabElement.select();
+        });
+        
+        card.appendChild(view.createTable(plan));
         
         // select the active tab
         if (plan.active || !app.selectedTab) {
@@ -147,6 +144,26 @@ var app = {
             tab.remove();
         }
     },
+};
+
+var app = {
+    plans: [],
+    planGroup: null,
+    flipbox: null,
+    hashtags: null,
+    plansURL: null,
+    oldHashtags: [],
+    selectedTab: null,
+
+    // Application Constructor
+    initialize: function() {
+        this.bindEvents();
+    },
+
+    bindEvents: function() {
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+    },
+
 
     /*
      * loadPlan:
@@ -180,7 +197,7 @@ var app = {
             }
             // store plan in localStorage
             localStorage.setItem(hashtag, planString);
-            app.drawUI(plan, hashtag);
+            view.createPlan(plan, hashtag);
         };
         request.onerror = function(error) {
             console.log('DEBUG: Failed to get ``' 
@@ -230,7 +247,7 @@ var app = {
         // check if already set
         app.plansURL = localStorage.getItem('plansURL');
         if (app.plansURL) {
-            serverInput.value = app.plansURL;    
+            serverInput.value = app.plansURL || null;    
         }
         // setting server from input
         serverInput.addEventListener('blur', function() {
@@ -252,12 +269,7 @@ var app = {
         }
         // setting hashtags from input
         function setHashtags(evt) {
-            if (evt.target.value) {
-                app.hashtags[evt.target.hashtagIndex] = evt.target.value;
-            } else {
-                app.hashtags[evt.target.hashtagIndex] = null;
-            }
-
+            app.hashtags[evt.target.hashtagIndex] = evt.target.value || null;
             localStorage.setItem('hashtags', JSON.stringify(app.hashtags));
         }
         // XXX hardcoded maximum number of plans == 3
@@ -278,16 +290,14 @@ var app = {
     },
 
     isConfigured: function() {
-        var isConfigured = false;
         if (app.plansURL && app.hashtags && app.hashtags.length > 0) {
             for (i = 0; i < app.hashtags.length; i++) {
                 if (app.hashtags[i]) {
-                    isConfigured = true;
+                    return true;
                 }
             }
         }
-
-        return isConfigured;
+        return false;
     },
 
     onDeviceReady: function() {
@@ -298,10 +308,10 @@ var app = {
 
         // load plans from storage or server
         navigator.globalization.getDateNames(function(dayOfWeekResponded){
-            app.dayOfWeek = dayOfWeekResponded;
+            view.dayOfWeek = dayOfWeekResponded;
             if (app.isConfigured()) {
                 // load plans from storage
-                for (var i=0; i < app.hashtags.length; i++) {
+                for (i = 0; i < app.hashtags.length; i++) {
                     var planString = localStorage.getItem(app.hashtags[i]);
                     if (planString === null) {
                         // something went wrong - let's try to load
@@ -309,7 +319,7 @@ var app = {
                         app.loadPlan(app.hashtags[i]);
                     } else {
                         var plan = JSON.parse(planString);
-                        app.drawUI(plan, app.hashtags[i]);
+                        view.createPlan(plan, app.hashtags[i]);
                     }
                 }
             }
