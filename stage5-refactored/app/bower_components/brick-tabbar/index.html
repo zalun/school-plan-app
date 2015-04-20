@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <title>brick-tabbar</title>
+
+    <!-- Importing Polyfill -->
+    <script src="bower_components/platform/platform.js"></script>
+
+    <!-- Importing Custom Elemenent -->
+    <link rel="import" href="dist/brick-tabbar.local.html">
+
+    <style type="text/css">
+      #demo-bar {
+        margin: 0 auto;
+        width: 320px;
+      }
+      #demo-bar[vertical] {
+        width: 180px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <brick-tabbar id="demo-bar">
+      <brick-tabbar-tab target="a" selected>
+        <i class="fa fa-camera-retro"></i>
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="b">
+        <i class="fa fa-envelope"></i>
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="c">
+        <i class="fa fa-home"></i>
+      </brick-tabbar-tab>
+    </brick-tabbar>
+
+    <hr>
+
+    <brick-tabbar id="demo-bar">
+      <brick-tabbar-tab target="a" selected>
+        <i class="fa fa-camera-retro"></i> Camera
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="b">
+        <i class="fa fa-envelope"></i> Messages
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="c">
+        <i class="fa fa-home"></i> Home
+      </brick-tabbar-tab>
+    </brick-tabbar>
+
+    <hr>
+
+    <brick-tabbar id="demo-bar">
+      <brick-tabbar-tab target="a" selected>
+        Camera
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="b">
+        Messages
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="c">
+        Home
+      </brick-tabbar-tab>
+    </brick-tabbar>
+
+    <hr>
+
+    <brick-tabbar id="demo-bar" vertical>
+      <brick-tabbar-tab target="a" selected>
+        <i class="fa fa-camera-retro"></i>
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="b">
+        <i class="fa fa-envelope"></i>
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="c">
+        <i class="fa fa-home"></i>
+      </brick-tabbar-tab>
+    </brick-tabbar>
+
+    <hr>
+
+    <brick-tabbar id="demo-bar" vertical>
+      <brick-tabbar-tab target="a" selected>
+        <i class="fa fa-camera-retro"></i> Fotos
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="b">
+        <i class="fa fa-envelope"></i> Messages
+      </brick-tabbar-tab>
+      <brick-tabbar-tab target="c">
+        <i class="fa fa-home"></i> Home
+      </brick-tabbar-tab>
+    </brick-tabbar>
+
+    <hr>
+
+    <brick-tabbar id="demo-bar" vertical>
+      <brick-tabbar-tab>
+        Fotos
+      </brick-tabbar-tab>
+      <brick-tabbar-tab>
+        Messages
+      </brick-tabbar-tab>
+      <brick-tabbar-tab>
+        Home
+      </brick-tabbar-tab>
+    </brick-tabbar>
+  </body>
+</html>

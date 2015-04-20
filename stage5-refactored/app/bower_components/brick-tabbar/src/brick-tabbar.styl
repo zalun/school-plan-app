@@ -1,0 +1,67 @@
+@import '../bower_components/brick-common/styles/mixins'
+@import '../bower_components/brick-common/styles/params'
+
+/**
+ * notice the () around teh attribute. that is because of
+ * :host([attr]) syntax to style the host node.
+ *
+ * example:
+ *  &([horizontal-lt-s/m/l]) { mixin() }
+ *  &([horizontal-gt-xs/s/m]) { mixin() }
+ *  &([horizontal-xs/s/m/l]) { mixin() }
+ *  &([horizontal]) { mixin() }
+ * would be created by:
+ * responsifyHost("& > ", horizontal, mixin)
+ */
+responsifyHost(selector, attr, content) {
+  // attr-lt-[s,m,l]
+  for $range in $s $m $l {
+    {selector}([{attr}-lt-{$range.name}]) {
+      @media (max-width: $range.start) {
+        content();
+      }
+    }
+  }
+  // attr-gt-[xs,s,m]
+  for $range in $xs $s $m {
+    {selector}([{attr}-gt-{$range.name}]) {
+      @media (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr-[xs,s,m,l]
+  for $range in $s $m {
+    {selector}([{attr}-{$range.name}]) {
+      @media (max-width: $range.start) and (min-width: $range.end) {
+        content();
+      }
+    }
+  }
+  // attr
+  {selector}([{attr}]) {
+    content();
+  }
+}
+
+:host {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  position: relative;
+  _vertical() {
+    flex-direction: column;
+  }
+  responsifyHost("&", vertical, _vertical);
+}
+
+::content brick-tabbar-tab {
+  flex: 1;
+  box-sizing: border-box;
+  display: inline-block;
+  cursor: pointer
+  text-align: center;
+}

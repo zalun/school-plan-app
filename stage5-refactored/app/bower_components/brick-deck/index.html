@@ -1,0 +1,382 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+  <title>brick-deck</title>
+
+  <!-- Importing Polyfill -->
+  <script src="bower_components/platform/platform.js"></script>
+
+  <!-- Importing Custom Elemenent -->
+  <link rel="import" href="dist/brick-deck.local.html">
+  <style type="text/css">
+    /** Defining custom styles:
+
+      Besides applying custom styles to the brick-deck and brick-cards
+      themselves, you can define styles for the following selectors to
+      determine how the widget appears during animations
+
+      brick-card[leaving]  => defines how a card looks when in the middle
+                 of transitioning out of frame
+      brick-card[selected] => defines how the currently selected card looks
+    **/
+
+    html, body{
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+    }
+
+    #demo-controls{
+      text-align: center;
+    }
+
+    #demo-box{
+      margin: 0 auto;
+
+      width: 150px;
+      height: 220px;
+      border: 4px solid grey;
+      background-color: #333;
+    }
+
+    #demo-box brick-card{
+      text-align:center;
+      font-size: 5em;
+      line-height: 1em;
+      padding: 50% 0;
+    }
+
+    #demo-box brick-card[transition-override]:after{
+      content: "transition-override = " attr(transition-override);
+      font-size: .25em;
+      line-height: 1em;
+      display: block;
+    }
+
+    #demo-box brick-card[leaving]:before{
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.3);
+    }
+
+    #demo-box brick-card[selected]{
+      color: white;
+      text-shadow: 1px 1px 10px black;
+    }
+
+    body .codebox{
+      display: inline-block;
+      max-height: 15em;
+      max-width: 100%;
+      overflow:auto;
+      margin: 0 auto;
+      padding: .5em;
+      padding-right: 1.5em;
+      text-align: left;
+    }
+
+    #property-wrap{
+      border: 1px solid grey;
+    }
+
+    #property-wrap code{
+      display: block;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    @media screen and (max-width: 800px) {
+      .code-box{
+        font-size: .75em;
+      }
+    }
+  </style>
+  </head>
+  <body>
+
+  <article>
+    <header><h1>brick-deck demo</h1></header>
+    <figure class="demo">
+      <brick-deck id="demo-box" transition-type="slide-left" selected-index="0">
+        <brick-card selected>0</brick-card>
+        <brick-card>1</brick-card>
+        <brick-card>2</brick-card>
+        <brick-card>3</brick-card>
+        <brick-card>4</brick-card>
+      </brick-deck>
+    </figure>
+
+    <div id="demo-controls">
+      <button onclick="getDemoBox().previousCard('reverse')"><-- Shuffle Prev</button>
+      <button onclick="getDemoBox().showCard(0)">Select Card at Index 0</button>
+      <button onclick="getDemoBox().nextCard()">Shuffle Next --></button>
+      <br/>
+      <button onclick="nextType()">change transition type</button>
+      <button onclick="addCard()">Add card</button>
+      <button onclick="addCard(true)">Add card with transition-type</button>
+      <button onclick="removeCard(0)">Remove first card</button>
+      <button onclick="removeCard()">Remove last card</button>
+      <button onclick="toggleLooping(event)">Toggle looping: OFF</button>
+      <h3>Markup for recreating this deck:</h3>
+      <pre id="markup-box" class="prettyprint codebox"></pre>
+      <h3>(some) Properties:</h3>
+      <div id="property-wrap" class="codebox">
+        <code id="selected-index-label" class="prettyprint"></code>
+        <code id="transition-type-label" class="prettyprint"></code>
+        <code id="count-label" class="prettyprint"></code>
+      </div>
+
+      <br/>
+      <button onclick="getDemoBox().showCard(1)">shuffleTo 1 (default)</button>
+      <button onclick="getDemoBox().showCard(2)">shuffleTo 2 (auto)</button>
+      <button onclick="getDemoBox().showCard(3, 'forward')">shuffleTo 3 (always forwards)</button>
+      <button onclick="getDemoBox().showCard(4, {direction:'reverse'})">shuffleTo 4 (always reverse)</button>
+      <button onclick="triggerShow(1)">Trigger reveal event on 1</button>
+      <button onclick="callShow(2)">Call .showCard() on 2</button>
+      <button onclick="editSelectedIndex(3)">Set selected-index to 3</button>
+    </div>
+  </article>
+
+  <script>
+
+  document.addEventListener('show', function(){
+    updateCodeBox();
+  }, false);
+
+  document.addEventListener('hide', function(){
+    updateCodeBox();
+  }, false);
+
+  function toggleLooping(e){
+    var demoBox = getDemoBox();
+    demoBox.loop = !demoBox.loop;
+    e.target.textContent = ('Toggle looping: ' + (demoBox.loop ? 'ON' : 'OFF'));
+  }
+
+    function cleanHtmlSource(html, ignoreAttrs){
+      // remove any attributes given in parameter, but only if they are
+      // actually in a tag
+      if(ignoreAttrs && ignoreAttrs.length){
+        // no global flag, or we will over-skip through string
+        var attrIgnoreRegex = new RegExp("(<[^>]*?\\s)(("+
+                         ignoreAttrs.join("|")+
+                         ")=\".*?\"\\s?)([^<]*?>)");
+        var match = attrIgnoreRegex.exec(html);
+        while(match){
+          html = html.substr(0, match.index) + match[1] + match[4] +
+               html.substr(match.index + match[0].length);
+          match = attrIgnoreRegex.exec(html);
+        }
+        html = html.replace(/\s*>/g, ">");
+      }
+
+      // find the least amount of tabbing and dedent each line by that much
+      var tabRegex = /\n(\s*?)(\S|\n)/g;
+      var spacing = tabRegex.exec(html);
+      if(spacing){
+        var shortest = spacing[1].length;
+        while(spacing){
+          if(spacing[1].length < shortest){
+            shortest = spacing[1].length;
+          }
+          spacing = tabRegex.exec(html);
+        }
+        if(shortest > 0){
+          var dedentRegex = new RegExp("\\n\\s{"+shortest+"}", "g");
+          html = html.replace(dedentRegex, "\n");
+        }
+      }
+      // trim spacing from start/end of markup
+      html = html.replace(/^\s*\n/, "");
+      html = html.replace(/\n\s*$/, "");
+      return html;
+    }
+
+    function updateCodeBox(isInit){
+      var demoBox = getDemoBox();
+      var sourceBox = document.getElementById("markup-box");
+
+      sourceBox.innerHTML = "";
+      var ignoreAttrs = ["style","card-anim-type","_before-animation",
+                "reverse","selected","leaving"];
+      // let markup reflect fact that selected-index isn't required for
+      // initialization
+      if(isInit){
+        ignoreAttrs.push("selected-index");
+      }
+
+      var newHtml = cleanHtmlSource(demoBox.outerHTML, ignoreAttrs);
+      // prettify html spacing for dynamically added elements
+      newHtml = newHtml.replace(/>(\s*)<brick-card/g, ">\n    <brick-card");
+      newHtml = newHtml.replace(/>(\s*)<\/brick-deck/g, ">\n</brick-deck");
+
+      sourceBox.textContent = newHtml;
+      sourceBox.class = "codebox";
+    }
+
+    function randomColor(alpha){
+      var _randomVal = function(){
+        return Math.floor(Math.random() * 256);
+      }
+      var type = (alpha) ? "rgba" : "rgb";
+      var alphaStr = (alpha) ? ","+alpha : "";
+
+      return type+"("+_randomVal()+","+_randomVal()+","+_randomVal()+alphaStr+")";
+    }
+
+    function getDemoBox(){
+      return document.getElementById("demo-box");
+    }
+
+    var transitionTypes = ["slide-left", "slide-right", "slide-up", "slide-down", "none"];
+
+    document.addEventListener('WebComponentsReady', function(){
+      var cards = document.querySelectorAll("brick-card");
+
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].style.backgroundColor = randomColor();
+      }
+
+      var demoBox = getDemoBox();
+
+      demoBox.addEventListener('shufflestart', function(e){
+        console.log("shufflestart", e);
+        updateStatuses();
+      });
+
+      demoBox.addEventListener('shuffleend', function(e){
+        console.log("shuffleend", e);
+        updateStatuses();
+      });
+
+      demoBox.addEventListener('cardadd', function(e){
+        console.log("cardadd", e);
+        updateStatuses();
+      });
+
+      demoBox.addEventListener('cardremove', function(e){
+        console.log("cardremove", e);
+        updateStatuses();
+      });
+
+      var buttons = document.querySelectorAll("button")
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener("click", function(){
+          updateStatuses();
+        });
+      }
+
+      updateStatuses(true);
+    }, false);
+
+    function editSelectedIndex(index){
+      var demoBox = getDemoBox();
+      demoBox.selectedIndex = index;
+      updateStatuses();
+    }
+
+    function triggerShow(index){
+      var demoBox = getDemoBox();
+      var card = demoBox.children[index];
+      card.dispatchEvent(new CustomEvent('reveal',{'bubbles':true}));
+      updateStatuses();
+    }
+
+    function callShow(index){
+      var demoBox = getDemoBox();
+      demoBox.showCard(index);
+    }
+
+    function updateStatuses(isInit){
+      updateCountBox();
+      updateSelectedStatus();
+      updateTypeStatus();
+      updateCodeBox(isInit);
+      //  prettyPrint();
+    }
+
+    function updateTypeStatus(){
+      var demoBox = getDemoBox();
+      var typeStatus = document.getElementById("transition-type-label");
+      typeStatus.textContent = '.transitionType -> "'+demoBox.transitionType+'"';
+      typeStatus.class = "";
+    }
+
+    function updateSelectedStatus(){
+      var demoBox = getDemoBox();
+      var statusBox = document.getElementById("selected-index-label");
+      statusBox.textContent = ".selectedIndex -> " + demoBox.selectedIndex;
+      statusBox.class = "";
+    }
+
+    function updateCountBox(){
+      var demoBox = getDemoBox();
+      document.getElementById("count-label").textContent = ".numCards -> "+demoBox.children.length;
+    }
+
+    // changes the transition type of deck
+    function nextType(){
+      var demoBox = getDemoBox();
+      var oldType = demoBox.transitionType;
+
+      var types = transitionTypes;
+
+      var typeIndex = types.indexOf(oldType);
+
+      if(typeIndex < 0){
+        throw "invalid type " + oldType;
+        return;
+      }
+
+      var newType = types[(typeIndex+1) % types.length];
+
+      //demoBox.transitionType = newType;
+      demoBox.setAttribute("transition-type", newType);
+
+      //demoBox.nextCard();
+    }
+
+    function addCard(addOverride){
+      var demoBox = getDemoBox();
+      var numCards = demoBox.children.length;
+
+      var newCard = document.createElement("brick-card");
+      newCard.style.backgroundColor = randomColor();
+
+      newCard.textContent = String(numCards);
+
+      if(addOverride){
+        var overrideType = (transitionTypes.length) ?
+                  transitionTypes[
+                    Math.floor(Math.random() *
+                           transitionTypes.length)
+                  ] : "none";
+        newCard.transitionType = overrideType;
+      }
+
+      demoBox.appendChild(newCard);
+      //demoBox.showCard(newCard);
+    }
+
+    function removeCard(index){
+      var demoBox = getDemoBox();
+      var cards = demoBox.cards;
+      if(index !== undefined && index < cards.length){
+        var removeCard = demoBox.children[index];
+        demoBox.removeChild(removeCard);
+      }
+      else if (cards.length > 0){
+        var lastCard = cards[cards.length - 1];
+
+        demoBox.removeChild(lastCard);
+      }
+    }
+  </script>
+  </body>
+</html>

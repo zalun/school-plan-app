@@ -49,16 +49,13 @@ var app = {
 
         app.planGroup.addEventListener('touchstart', function(evt) {
             var touches = evt.changedTouches;
-            console.log('1 finger down');
             if (touches.length == 1) {
-                console.log('1 finger down');
                 // runs only for one finger touch
                 touchStart(touches[0].pageX);
             }
         });
 
         app.planGroup.addEventListener('touchmove', function(evt) {
-            console.log('finger moved');
             // switched off scrolling on webkit
             evt.preventDefault(); 
             touchEnd(evt.changedTouches[0].pageX);

@@ -1,0 +1,78 @@
+[
+  {
+    "title": "Angelica",
+    "id": "angelica",
+    "active": 1,
+    "week": [
+      [
+        "Art",
+        "Art",
+        "English",
+        "English",
+        "History",
+        "Geography"
+      ], [
+        "English",
+        "Graphics",
+        "History",
+        "Maths"
+      ], [
+        "Music",
+        "Physical Edu",
+        "Physical Edu",
+        "Science",
+        "Spanish",
+        "Maths"
+      ], [
+        "Biology",
+        "Physics",
+        "Religious Edu",
+        "Drama"
+      ], [
+        "Biology",
+        "Geography",
+        "History",
+        "Science"
+      ]
+    ]
+  }, {
+    "title": "Andrew",
+    "id": "andrew",
+    "week": [
+      [
+        "English",
+        "Maths",
+        "Maths",
+        "English",
+        "Geography",
+        "Physics"
+      ], [
+        "English",
+        "English",
+        "English",
+        "Geography",
+        "French",
+        "Religious Edu"
+      ], [
+        "French",
+        "Maths",
+        "Art",
+        "Art",
+        "History"
+      ], [
+        "Geography",
+        "German",
+        "German",
+        "Maths",
+        "Maths",
+        "Biology"
+      ], [
+        "Business",
+        "Business",
+        "Maths",
+        "Maths",
+        "English"
+      ]
+    ]
+  }
+]
