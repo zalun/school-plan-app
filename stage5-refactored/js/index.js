@@ -107,6 +107,15 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
 
+    onDeviceReady: function() {
+        var request = new XMLHttpRequest();
+        request.onload = app.renderData;
+        request.open("get", "app_data/plans.json", true);
+        request.send();
+
+        app.activateFingerSwipe();
+    },
+
     renderData: function() {
         var plans = JSON.parse(this.responseText);
         var deck = document.getElementById('plan-group');
@@ -119,12 +128,7 @@ var app = {
         }, function() {}, {type: 'narrow', item: 'days'});
     },
 
-    onDeviceReady: function() {
-        var request = new XMLHttpRequest();
-        request.onload = app.renderData;
-        request.open("get", "app_data/plans.json", true);
-        request.send();
-
+    activateFingerSwipe: function() {
         // Switching from one tab to another is done automatically
         // We just need to link it backwards - change menu if slides
         // changed without touching the menu
