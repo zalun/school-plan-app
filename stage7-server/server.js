@@ -3,6 +3,12 @@ var fs = require('fs'),
     http = require('http'),
     url = require('url');
 
+function http404(response, message) {
+  response.writeHead('404');
+  response.end(message);
+  console.log('404 - ' + message);
+}
+
 http.createServer(function (request, response) {
   fs.readFile(__dirname + "/plans.json", function (err, dataString) {
     var args;
@@ -17,33 +23,40 @@ http.createServer(function (request, response) {
       return;
     }
 
-    data = JSON.parse(dataString);
     response.writeHead(200, {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*", 
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"});
 
+    data = JSON.parse(dataString);
     // extract the hashtag from the url http://{address}/{hahtag}
     args = url.parse(request.url).pathname.split('/');
     command = args[1];
 
-    if (command === 'plan') {
-      content = JSON.stringify(data[args[2]]);
-      sys.puts("accessed " + args[2]);
-    } 
+    if (command === 'plans') {
+      var userid = args[2];
+      var user = data.users[userid];
+      if (!user) {
+        http404(response, 'No such user');
+      } else {
+        var plans = [];
+        for (var i = 0; i < user.plans.length; i++) {
+           var hashtag = user.plans[i];
+           // copy plan to plans
+           plans.push(data.plans[hashtag]);
+        }
+        content = JSON.stringify(plans);
+        console.log("accessed user - " + userid);
 
-    else if (command === 'keys') {
-      content = JSON.stringify(Object.keys(data));
-      sys.puts("accessed keys - " + content);
+        // send the response to client
+        response.end(content);
+      }
     }
 
     else {
-      response.writeHead('404');
-      response.end('URL not recognized');
+      http404(response, 'URL not recognized');
     }
 
-    // send the response to client
-    response.end(content);
   });
 }).listen(8080);
-sys.puts("Server Running on 8080");   
+console.log("Server Running on 8080");   
