@@ -36,21 +36,23 @@ http.createServer(function (request, response) {
     if (command === 'plans') {
       var userid = args[2];
       var user = data.users[userid];
+
       if (!user) {
         http404(response, 'No such user');
-      } else {
-        var plans = [];
-        for (var i = 0; i < user.plans.length; i++) {
-           var hashtag = user.plans[i];
-           // copy plan to plans
-           plans.push(data.plans[hashtag]);
-        }
-        content = JSON.stringify(plans);
-        console.log("accessed user - " + userid);
+        return;
+      } 
 
-        // send the response to client
-        response.end(content);
+      var plans = [];
+      for (var i = 0; i < user.plans.length; i++) {
+         var hashtag = user.plans[i];
+         // copy plan to plans
+         plans.push(data.plans[hashtag]);
       }
+      content = JSON.stringify(plans);
+      console.log("accessed user - " + userid);
+
+      // send the response to client
+      response.end(content);
     }
 
     else {
@@ -59,4 +61,4 @@ http.createServer(function (request, response) {
 
   });
 }).listen(8080);
-console.log("Server Running on 8080");   
+console.log("Server Running on 8080. Navigate to http://localhost:8080/plans/username to display plans");   
