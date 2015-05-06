@@ -66,7 +66,7 @@ tbody tr:nth-child(odd) {
 	width: calc(100% - 45px);
 }
 
-#settings-button, #settings-off-button {
+#reload-button {
 	float: left;
 	/* height of the tabbar */
 	width: 45px;

@@ -4,16 +4,18 @@ function User(userid) {
     this.plans = [];
 }
 
+/* method: User::getPlans()
+ * loads data assigned to user and calls User::displayPlans()
+ */
 User.prototype.getPlans = function() {
     var self = this;
     var request = new XMLHttpRequest({
         mozAnon: true,
         mozSystem: true});
     request.onload = function() {
-        var plans = JSON.parse(this.responseText);
-        for (var i = 0; i < plans.length; i++) {
-            self.plans.push(new Plan(plans[i]));
-        }
+        console.log('DEBUG: plans loaded from server');
+        self.initiatePlans(this.responseText);
+        localStorage.setItem('plans', this.responseText);
         self.displayPlans();
     };
     request.onerror = function(error) {
@@ -23,6 +25,47 @@ User.prototype.getPlans = function() {
     request.send();
 };
 
+/* method: User::reloadPlans()
+ * removes all existing plans UI and calls User::getPlans()
+ */
+User.prototype.reloadPlans = function() {
+    // remove UI from plans
+    for (var i = 0; i < this.plans.length; i++) {
+        this.plans[i].removeUI();
+    }
+    // clean this.plans
+    this.plans = [];
+    // load plans from server
+    this.getPlans();
+};
+
+/* method: User::initiatePlans()
+ * parses plans from JSON representation and initiates a new Plan for
+ * each of them
+ */
+User.prototype.initiatePlans = function(plansString) {
+    var plans = JSON.parse(plansString);
+    for (var i = 0; i < plans.length; i++) {
+        this.plans.push(new Plan(plans[i]));
+    }
+}
+
+/* method: User::loadPlans()
+ * loads plans from either localStorage or using User::getPlans
+ */
+User.prototype.loadPlans = function() {
+    var plans = localStorage.getItem('plans');
+    if (plans === null) {
+        return this.getPlans();
+    }
+    console.log('DEBUG: plans loaded from device');
+    this.initiatePlans(plans);
+    this.displayPlans();
+};
+
+/* method: User::displayPlans()
+ * loads local names of days and calls Plan::createUI for each plan
+ */
 User.prototype.displayPlans = function() {
     var self = this;
     navigator.globalization.getDateNames(function(dayOfWeek){
@@ -45,6 +88,10 @@ function Plan(plan) {
     this.table = null;
 };
 
+/* method Plan::selectTab()
+ * switches the active tab of <brick-tabbar>
+ * uses polling as brick might not be fully loaded yet
+ */
 Plan.prototype.selectTab = function(deck) {
     var self = this;
     function selectActiveTab() {
@@ -56,6 +103,10 @@ Plan.prototype.selectTab = function(deck) {
     selectActiveTab();
 };
 
+/* method Plan::createUI()
+ * creates <brick-card> and <brick-tab> elements, then renders plan into
+ * the <table> element
+ */
 Plan.prototype.createUI = function(deck, tabbar, dayOfWeek) {
     // create card
     this.card = document.createElement('brick-card');
@@ -130,7 +181,12 @@ Plan.prototype.createUI = function(deck, tabbar, dayOfWeek) {
     if (this.active) {
         this.selectTab(deck);
     }
-}
+};
+
+Plan.prototype.removeUI = function() {
+    this.card.remove();
+    this.tab.remove();
+};
 
 var app = {
     plans: [],
@@ -146,10 +202,10 @@ var app = {
 
     onDeviceReady: function() {
         app.user = new User('johndoe');
-        app.user.getPlans();
-        app.user.displayPlans();
+        app.user.loadPlans();
 
         app.activateFingerSwipe();
+        app.assignButtons();
     },
 
     activateFingerSwipe: function() {
@@ -198,6 +254,12 @@ var app = {
         });
     },
 
+    assignButtons: function(){
+        var reloadButton = document.getElementById('reload-button');
+        reloadButton.addEventListener('touchstart', function() {
+            app.user.reloadPlans();
+        }, false);
+    },
 
     previousPlan: function() {
         app.planGroup.previousCard();
