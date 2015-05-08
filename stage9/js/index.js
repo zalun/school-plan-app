@@ -54,7 +54,6 @@ User.prototype.initiatePlans = function(plansString) {
     for (var i = 0; i < plans.length; i++) {
         this.plans.push(new Plan(plans[i]));
     }
-    return true;
 }
 
 /* method: User::loadPlans()
