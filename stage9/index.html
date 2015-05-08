@@ -31,7 +31,7 @@
         <link rel="import" href="app/bower_components/brick-tabbar/dist/brick-tabbar.html">
         <link rel="import" href="app/bower_components/brick-flipbox/dist/brick-flipbox.html">
         <meta name="msapplication-tap-highlight" content="no" />
-        <title>School Plan - Stage 6</title>
+        <title>School Plan - Stage 9</title>
     </head>
     <body>
         <brick-flipbox>
@@ -44,18 +44,14 @@
                 <brick-deck id="plan-group">
                 </brick-deck>
             </section>
-            <section>
+            <section id="section-settings">
                 <div id="settings-off-button"></div>
                 <h2>Settings</h2>
-                <form id="settings">
-                    <p><label for="server-input">Server</label></p>
-                    <p><input type="text" id="server-input" placeholder="http://example.com/"/></p>
-                    <p><label for="input-plan-1" id="label-plan-1">Plan 1</label></p>
-                    <p><input type="text" id="input-plan-1" placeholder="dmcvnlckijclk"/></p>
-                    <p><label for="input-plan-2" id="label-plan-2">Plan 2</label></p>
-                    <p><input type="text" id="input-plan-2" placeholder="dlifujhdlfkjx"/></p>
-                    <p><label for="input-plan-3" id="label-plan-3">Plan 3</label></p>
-                    <p><input type="text" id="input-plan-3" placeholder="fknvmsnxlkdsj"/></p>
+                <form id="form-settings">
+                    <p><label for="input-server">Server</label></p>
+                    <p><input type="text" id="input-server" placeholder="http://example.com/"/></p>
+                    <p><label for="input-user" id="label-user">User ID</label></p>
+                    <p><input type="text" id="input-user" placeholder="johndoe"/></p>
                     <p><button id="reload-button">RELOAD ALL</button></p>
                 </form>
             </section>

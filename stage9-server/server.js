@@ -3,6 +3,12 @@ var fs = require('fs'),
     http = require('http'),
     url = require('url');
 
+function http404(response, message) {
+  response.writeHead('404');
+  response.end(message);
+  console.log('404 - ' + message);
+}
+
 http.createServer(function (request, response) {
   fs.readFile(__dirname + "/plans.json", function (err, dataString) {
     var args;
@@ -17,33 +23,40 @@ http.createServer(function (request, response) {
       return;
     }
 
-    data = JSON.parse(dataString);
     response.writeHead(200, {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*", 
       "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"});
 
+    data = JSON.parse(dataString);
     // extract the hashtag from the url http://{address}/{hahtag}
     args = url.parse(request.url).pathname.split('/');
     command = args[1];
 
-    if (command === 'plan') {
-      if (data[args[2]]) {
-        content = JSON.stringify(data[args[2]]);
-        sys.puts("accessed " + args[2]);
+    if (command === 'plans') {
+      var userid = args[2];
+      var user = data.users[userid];
+      if (!user) {
+        http404(response, 'No such user');
       } else {
-          console.log('ERROR: ' + args[2]);
-          response.writeHead(404, {"Content-Type": "text/plain"});
-          response.end('404. No such plan (' + args[2] + ')');
+        var plans = [];
+        for (var i = 0; i < user.plans.length; i++) {
+           var hashtag = user.plans[i];
+           // copy plan to plans
+           plans.push(data.plans[hashtag]);
+        }
+        content = JSON.stringify(plans);
+        console.log("accessed user - " + userid);
+
+        // send the response to client
+        response.end(content);
       }
-    } 
-    else {
-      response.writeHead(404, {"Content-Type": "text/plain"});
-      response.end('404. URL not recognized');
     }
 
-    // send the response to client
-    response.end(content);
+    else {
+      http404(response, 'URL not recognized');
+    }
+
   });
 }).listen(8080);
-sys.puts("Server Running on http://0.0.0.0:8080");   
+console.log("Server Running on 8080. Navigate to http://localhost:8080/plans/username to display plans");   

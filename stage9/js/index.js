@@ -1,161 +1,203 @@
-var view = {
-    deck: null,
-    tabbar: null,
-    initiated: false,
-    dayOfWeek: null,
+// User type
+function User(userid) {
+    this.id = userid;
+    this.plans = [];
+}
 
-    setup: function() {
-        view.deck = document.getElementById('plan-group');
-        view.tabbar = document.getElementById('plan-group-menu');
-        view.initiated = true;
-    },
+/* method: User::getPlans()
+ * loads data assigned to user and calls User::displayPlans()
+ */
+User.prototype.getPlans = function(callback) {
+    var self = this;
+    var url = app.plansServer + '/plans/' + this.id;
+    var request = new XMLHttpRequest({
+        mozAnon: true,
+        mozSystem: true});
+    request.onload = function() {
+        console.log('DEBUG: plans loaded from server');
+        self.initiatePlans(this.responseText);
+        localStorage.setItem('plans', this.responseText);
+        self.displayPlans();
+        if (callback) {
+            callback();
+        }
+    };
+    request.onerror = function(error) {
+        console.log('DEBUG: Failed to get plans from ``' + url + '``', error);
+    };
+    request.open("get", url, true);
+    request.send();
+};
 
-    createTable: function(plan) {
-        // create plan table
-        var table = document.createElement('table');
+/* method: User::reloadPlans()
+ * removes all existing plans UI and calls User::getPlans()
+ */
+User.prototype.reloadPlans = function() {
+    // remove UI from plans
+    for (var i = 0; i < this.plans.length; i++) {
+        this.plans[i].removeUI();
+    }
+    // clean this.plans
+    this.plans = [];
+    // clean phone's storage
+    localStorage.setItem('plans', '[]');
+    // load plans from server
+    this.getPlans(app.toggleSettings);
+};
 
-        // transpone array (tables are created per hour instead
-        // of per day as data is stored)
-        var numberOfDays = plan.week.length;
-        var daysInHours = [];
-        // delete non existing days
-        var cleanPlan = [];
-        for (i = 0; i < numberOfDays; i++) {
-            if (plan.week[i].length > 0) {
-                cleanPlan.push(plan.week[i]);
+/* method: User::initiatePlans()
+ * parses plans from JSON representation and initiates a new Plan for
+ * each of them
+ */
+User.prototype.initiatePlans = function(plansString) {
+    var plans = JSON.parse(plansString);
+    for (var i = 0; i < plans.length; i++) {
+        this.plans.push(new Plan(plans[i]));
+    }
+    return true;
+}
+
+/* method: User::loadPlans()
+ * loads plans from either localStorage or using User::getPlans
+ */
+User.prototype.loadPlans = function() {
+    var plans = localStorage.getItem('plans');
+    if (plans === null) {
+        return this.getPlans();
+    }
+    console.log('DEBUG: plans loaded from device');
+    this.initiatePlans(plans);
+    this.displayPlans();
+};
+
+/* method: User::displayPlans()
+ * loads local names of days and calls Plan::createUI for each plan
+ */
+User.prototype.displayPlans = function() {
+    var self = this;
+    navigator.globalization.getDateNames(function(dayOfWeek){
+        var deck = document.getElementById('plan-group');
+        var tabbar = document.getElementById('plan-group-menu');
+        for (var i = 0; i < self.plans.length; i++) {
+            self.plans[i].createUI(deck, tabbar, dayOfWeek);
+        }
+    }, function() {}, {type: 'narrow', item: 'days'});
+};
+
+// Plan type 
+function Plan(plan) {
+    this.schedule = plan.week;
+    this.title = plan.title;
+    this.id = plan.id;
+    this.active = plan.active;
+    this.tab = null;
+    this.card = null;
+    this.table = null;
+};
+
+/* method Plan::selectTab()
+ * switches the active tab of <brick-tabbar>
+ * uses polling as brick might not be fully loaded yet
+ */
+Plan.prototype.selectTab = function(deck) {
+    var self = this;
+    function selectActiveTab() {
+        if (!self.tab.targetElement) {
+            return window.setTimeout(selectActiveTab, 100);
+        }
+        deck.showCard(self.tab.targetElement);
+    }
+    selectActiveTab();
+};
+
+/* method Plan::createUI()
+ * creates <brick-card> and <brick-tab> elements, then renders plan into
+ * the <table> element
+ */
+Plan.prototype.createUI = function(deck, tabbar, dayOfWeek) {
+    // create card
+    this.card = document.createElement('brick-card');
+    this.card.setAttribute('id', this.id);
+    deck.appendChild(this.card);
+
+    //create tab
+    this.tab = document.createElement('brick-tabbar-tab');
+    this.tab.setAttribute('target', this.id);
+    this.tab.appendChild(document.createTextNode(this.title));
+    tabbar.appendChild(this.tab);
+
+    // link card and tab DOM Elements
+    this.card.tabElement = this.tab;
+    this.card.addEventListener('show', function() {
+        this.tabElement.select();
+    });
+
+    // create plan table
+    this.table = document.createElement('table');
+
+    // hide not used days
+    var numberOfDays = this.schedule.length;
+    var cleanPlan = [];
+    for (var j = 0; j < numberOfDays; j++) {
+        if (this.schedule[j].length > 0) {
+            cleanPlan.push(this.schedule[j]);
+        }
+    }
+
+    // rotate the table
+    var daysInHours = [];
+    for (j = 0; j < cleanPlan.length; j++) {
+        for (var k = 0; k < cleanPlan[j].length; k++) {
+            if (!daysInHours[k]) {
+                daysInHours[k] = [];
+            }
+            daysInHours[k][j] = cleanPlan[j][k];
+        }
+    }
+
+    // create plan's DOM Elements
+    for (var j = 0; j < daysInHours.length; j++) {
+        var tr = this.table.insertRow(-1);
+        var td = tr.insertCell(-1);
+        td.appendChild(document.createTextNode(j + 1));
+        for (var k = 0; k < cleanPlan.length; k++) {
+            var td = tr.insertCell(-1);
+            if (daysInHours[j][k]) {
+                td.appendChild(document.createTextNode(daysInHours[j][k]));
             }
         }
-        for (i = 0; i < cleanPlan.length; i++) {
-            for (j = 0; j < cleanPlan[i].length; j++) {
-                if (!daysInHours[j]) {
-                    daysInHours[j] = [];
-                }
-                daysInHours[j][i] = cleanPlan[i][j];
-            }
-        }
+    }
 
-        // create table header
-        var thead = table.createTHead();
-        tr = thead.insertRow();
-        var th_empty = document.createElement('th');
-        tr.appendChild(th_empty);
-        var planDayNumber, weekDayNumber;
-        for (i = 1; i < numberOfDays + 1; i++) {
-            // add th only if week isn't empty
-            // 0 - Monday, 6 - Sunday
-            planDayNumber = i - 1;
-            // 0 - Sunday, 6 - Saturday
-            weekDayNumber = i % 7;
-            if (plan.week[planDayNumber].length > 0) {
-                th = document.createElement('th');
-                th.appendChild(document.createTextNode(view.dayOfWeek.value[weekDayNumber]));
-                tr.appendChild(th);
-            }
+    // create plan's header
+    var thead = this.table.createTHead();
+    var tr = thead.insertRow();
+    var th_empty = document.createElement('th');
+    tr.appendChild(th_empty);
+    var weekDayNumber;
+    for (var j = 0; j < numberOfDays; j++) {
+        var weekDayNumber = (j + 1) % 7;
+        if (this.schedule[j].length > 0) {
+            var th = document.createElement('th');
+            th.appendChild(document.createTextNode(dayOfWeek.value[weekDayNumber]));
+            tr.appendChild(th);
         }
-        // create content of the card
-        var th, tr, td;
-        for (i = 0; i < daysInHours.length; i++) {
-            tr = table.insertRow(-1);
-            td = tr.insertCell(-1);
-            td.appendChild(document.createTextNode(i + 1));
-            // we use cleanPlan.length here as we want all hours to
-            // be rendered in all days
-            for (j = 0; j < cleanPlan.length; j++) {
-                td = tr.insertCell(-1);
-                if (daysInHours[i][j]) {
-                    td.appendChild(document.createTextNode(daysInHours[i][j]));
-                }
-            }
-        }
-        return table;
-    },
+    }
+    this.card.appendChild(this.table);
 
-    /*
-     * createPlan:
-     * create a card, tabbar and table for a plan
-     */
-    createPlan: function(plan, hashtag) {
-        var tab;
-        var i, j;
-        
-        if (!view.initiated) {
-            view.setup();
-        }
-        // there is a possibility of race condition (Brick not fully loaded), 
-        // a simple hack is to use polling.
-        function selectTab(activeTab) {
-            function selectActiveTab() {
-                if (!activeTab.targetElement) {
-                    return window.setTimeout(selectActiveTab, 100);
-                }
-                view.deck.showCard(activeTab.targetElement);
-            }
-            selectActiveTab();
-        }
-        
-        // search for errors
-        if (!plan || plan.error || !plan.week) {
-            return;
-        }
+    // select current plan if active
+    if (this.active) {
+        this.selectTab(deck);
+    }
+};
 
-        // create card
-        card = document.createElement('brick-card');
-        card.setAttribute('id', hashtag);
-        view.deck.appendChild(card); 
-
-        //create tab
-        tab = document.createElement('brick-tabbar-tab');
-        tab.setAttribute('target', hashtag);
-        tab.setAttribute('id', 'tab-' + hashtag);
-        // store selectedTab - it is used to provide selecting the last
-        // loaded tab by default (if none of plans has ``active`` parameter
-        tab.addEventListener('select', function(event) {
-            app.selectedTab = event.target;
-        });
-        tab.appendChild(document.createTextNode(plan.title));
-        view.tabbar.appendChild(tab);
-        // Switching from one tab to another is done automatically
-        // We just need to link it backwards - change tab if
-        // card is changed without touching the tabbar elements
-        card.tabElement = tab;
-        card.addEventListener('show', function() {
-            this.tabElement.select();
-        });
-        
-        card.appendChild(view.createTable(plan));
-        
-        // select the active tab
-        if (plan.active || !app.selectedTab) {
-            selectTab(tab);
-        }
-    },
-
-    removeUI: function(hashtag) {
-        // delete card and tab
-        var card = document.getElementById(hashtag);
-        if (card) {
-            card.remove();
-        }
-        var tab = document.getElementById('tab-' + hashtag);
-        if (tab) {
-            if (app.selectedTab == tab) {
-                app.selectedTab = null;
-            }
-            tab.remove();
-        }
-    },
+Plan.prototype.removeUI = function() {
+    this.card.remove();
+    this.tab.remove();
 };
 
 var app = {
     plans: [],
     planGroup: null,
-    flipbox: null,
-    hashtags: null,
-    plansURL: null,
-    oldHashtags: [],
-    selectedTab: null,
-
-    // Application Constructor
     initialize: function() {
         this.bindEvents();
     },
@@ -164,167 +206,27 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
 
+onDeviceReady: function() {
+    app.plansServer = localStorage.getItem('plansServer');
+    app.userID = localStorage.getItem('userID');
+    app.activateFingerSwipe();
+    app.assignButtons();
 
-    /*
-     * loadPlan:
-     * load a plan identified by a hashtag
-     * on success draw the UI
-     */
-    loadPlan: function(hashtag) {
-        if (!hashtag) {
-            return;
-        }
-        var request = new XMLHttpRequest({
-            mozAnon: true,
-            mozSystem: true});
-        request.onload = function() {
-            if (this.status !== 200) {
-                console.log('DEBUG: Failed to get ``' 
-                            + app.plansURL + '/plan/' + hashtag, this.status);
-                window.alert('ERROR: ' + this.responseText);
-                app.removeUI(hashtag);
-                return;
-            }
-            var plan;
-            try {
-                planString = this.responseText;
-                plan = JSON.parse(planString);
-            } catch(e) {
-                console.log('DEBUG: Unable to parse the JSON file');
-                window.alert('ERROR: Unable to parse the JSON file');
-                app.removeUI(hashtag);
-                return;
-            }
-            // store plan in localStorage
-            localStorage.setItem(hashtag, planString);
-            view.createPlan(plan, hashtag);
-        };
-        request.onerror = function(error) {
-            console.log('DEBUG: Failed to get ``' 
-                        + app.plansURL + '/plan/' + hashtag, error);
-            window.alert('ERROR: Failed to get ' + app.plansURL + '/plan/' + hashtag);
-            app.removeUI(hashtag);
-        };
-        request.open("get", app.plansURL + '/plan/' + hashtag, true);
-        request.send();
-    },
+    console.log(app.userID);
+    if (app.plansServer && app.userID) {
+        app.user = new User(app.userID);
+        app.user.loadPlans();
+    } else {
+        app.toggleSettings();
+    }
+},
 
-    /*
-     * reloadPlans:
-     * get list of the plans for given URL (stored in plansURL)
-     */
-    reloadPlans: function() {
-        var i;
-        for (i = 0; i < app.oldHashtags.length; i++) {
-            localStorage.removeItem(app.oldHashtags[i]);
-            app.removeUI(app.oldHashtags[i]);
-        }
-        if (!app.isConfigured()) {
-            // do not try to load plans if not configured
-            return;
-        }
-        for (i = 0; i < app.hashtags.length; i++) {
-            app.oldHashtags[i] = app.hashtags[i];
-            // get each plan at a time
-            // WARNING: order of the plans is a subject of race condition
-            app.loadPlan(app.hashtags[i]);
-        }
-        app.flipbox.toggle();
-    },
-
-    setup: function() {
-        app.flipbox = document.querySelector('brick-flipbox');
-        var settingsButton = document.getElementById('settings-button');
-        var settingsOffButton = document.getElementById('settings-off-button');
-        settingsButton.addEventListener('click', app.toggleSettings);
-        settingsOffButton.addEventListener('click', app.toggleSettings);
-
-        var reloadButton = document.getElementById('reload-button');
-        reloadButton.addEventListener('touchstart', app.reloadPlans, false);
-
-        // server value
-        var serverInput = document.getElementById('server-input');
-        // check if already set
-        app.plansURL = localStorage.getItem('plansURL');
-        if (app.plansURL) {
-            serverInput.value = app.plansURL || null;    
-        }
-        // setting server from input
-        serverInput.addEventListener('blur', function() {
-            app.plansURL = serverInput.value;
-            localStorage.setItem('plansURL', app.plansURL);
-        });
-
-        // read hashtags from localStorage
-        var hashtagsString = localStorage.getItem('hashtags') || '[]';
-        var hashtagInput;
-        app.hashtags = JSON.parse(hashtagsString);
-        // set hashtags in the settings
-        for (i = 0; i < app.hashtags.length; i++) {
-            app.oldHashtags[i] = app.hashtags[i];
-            hashtagInput = document.getElementById('input-plan-' + (i + 1));
-            if (app.hashtags[i]) {
-                hashtagInput.value = app.hashtags[i];
-            }
-        }
-        // setting hashtags from input
-        function setHashtags(evt) {
-            app.hashtags[evt.target.hashtagIndex] = evt.target.value || null;
-            localStorage.setItem('hashtags', JSON.stringify(app.hashtags));
-        }
-        // XXX hardcoded maximum number of plans == 3
-        for (i = 1; i < 4; i++) {
-            hashtagInput = document.getElementById('input-plan-' + i);
-            hashtagInput.addEventListener('blur', setHashtags);
-            hashtagInput.hashtagIndex = i - 1;
-        }
-        // flip to settings if not configured yet
-        if (!app.isConfigured()) {
-            app.flipbox.toggle();
-        }
-
-    },
-
-    toggleSettings: function() {
-        app.flipbox.toggle();
-    },
-
-    isConfigured: function() {
-        if (app.plansURL && app.hashtags && app.hashtags.length > 0) {
-            for (i = 0; i < app.hashtags.length; i++) {
-                if (app.hashtags[i]) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    },
-
-    onDeviceReady: function() {
-        // SETTINGS
-        var i;
-
-        app.setup();
-
-        // load plans from storage or server
-        navigator.globalization.getDateNames(function(dayOfWeekResponded){
-            view.dayOfWeek = dayOfWeekResponded;
-            if (app.isConfigured()) {
-                // load plans from storage
-                for (i = 0; i < app.hashtags.length; i++) {
-                    var planString = localStorage.getItem(app.hashtags[i]);
-                    if (planString === null) {
-                        // something went wrong - let's try to load
-                        // plans from server
-                        app.loadPlan(app.hashtags[i]);
-                    } else {
-                        var plan = JSON.parse(planString);
-                        view.createPlan(plan, app.hashtags[i]);
-                    }
-                }
-            }
-        }, function() {}, {type: 'narrow', item: 'days'});
-
+    activateFingerSwipe: function() {
+        // Switching from one tab to another is done automatically
+        // We just need to link it backwards - change menu if slides
+        // changed without touching the menu
+        app.planGroupMenu = document.getElementById('plan-group-menu');
+        
         // Implementing one finger swipe to change deck card
         app.planGroup = document.getElementById('plan-group');
 
@@ -353,7 +255,7 @@ var app = {
         app.planGroup.addEventListener('touchstart', function(evt) {
             var touches = evt.changedTouches;
             if (touches.length === 1) {
-                // happens only for one finger touch
+                // runs only for one finger touch
                 touchStart(touches[0].pageX);
             }
         });
@@ -363,7 +265,52 @@ var app = {
             evt.preventDefault(); 
             touchEnd(evt.changedTouches[0].pageX);
         });
+    },
 
+    toggleSettings: function() {
+        app.flipbox.toggle();
+    },
+
+    assignButtons: function(){
+        app.flipbox = document.querySelector('brick-flipbox');
+        var settingsButton = document.getElementById('settings-button');
+        var settingsOffButton = document.getElementById('settings-off-button');
+        settingsButton.addEventListener('click', app.toggleSettings);
+        settingsOffButton.addEventListener('click', app.toggleSettings);
+
+        var reloadButton = document.getElementById('reload-button');
+        reloadButton.addEventListener('touchend', function() {
+            app.user.reloadPlans();
+        }, false);
+
+        var serverInput = document.getElementById('input-server');
+        if (app.plansServer) {
+            serverInput.value = app.plansServer;    
+        }
+        serverInput.addEventListener('blur', function() {
+            app.plansServer = serverInput.value || null;
+            localStorage.setItem('plansServer', app.plansServer);
+        });
+
+        var userInput = document.getElementById('input-user');
+        if (app.userID) {
+            userInput.value = app.userID;    
+        }
+        userInput.addEventListener('blur', function() {
+            app.userID = userInput.value || null;
+            if (app.userID) {
+                if (app.user) {
+                    app.user.id = app.userID;
+                } else {
+                    app.user = new User(app.userID);
+                }
+                localStorage.setItem('userID', app.userID);
+            }
+        });
+
+        document.getElementById('form-settings').addEventListener('submit', function(e) {
+            e.preventDefault();
+        }, false)
     },
 
     previousPlan: function() {
@@ -373,8 +320,9 @@ var app = {
     nextPlan: function() {
         app.planGroup.nextCard();
     }
-};
+}
 
 window.onload = function() {
   app.initialize();
-};
+}
+
