@@ -205,20 +205,20 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
 
-onDeviceReady: function() {
-    app.plansServer = localStorage.getItem('plansServer');
-    app.userID = localStorage.getItem('userID');
-    app.activateFingerSwipe();
-    app.assignButtons();
+    onDeviceReady: function() {
+        app.plansServer = localStorage.getItem('plansServer');
+        app.userID = localStorage.getItem('userID');
+        app.activateFingerSwipe();
+        app.assignButtons();
 
-    console.log(app.userID);
-    if (app.plansServer && app.userID) {
-        app.user = new User(app.userID);
-        app.user.loadPlans();
-    } else {
-        app.toggleSettings();
-    }
-},
+        console.log(app.userID);
+        if (app.plansServer && app.userID) {
+            app.user = new User(app.userID);
+            app.user.loadPlans();
+        } else {
+            app.toggleSettings();
+        }
+    },
 
     activateFingerSwipe: function() {
         // Switching from one tab to another is done automatically
