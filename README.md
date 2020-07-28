@@ -3,6 +3,9 @@ School Plan app
 
 Stage by stage - creating a school plan app
 
+https://hacks.mozilla.org/2014/10/creating-a-mobile-app-from-a-simple-html-site/
+
+
 Defining a problem
 ------------------
 
